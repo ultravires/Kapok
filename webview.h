@@ -1,6 +1,7 @@
 #ifndef WEBVIEW_H
 #define WEBVIEW_H
 
+#include <QEvent>
 #include <QWebEngineView>
 
 class WebView : public QWebEngineView {
@@ -10,6 +11,7 @@ class WebView : public QWebEngineView {
     ~WebView();
 
   protected:
+    bool            event( QEvent *event ) override;
     QWebEngineView *createWindow( QWebEnginePage::WebWindowType type ) override;
 
   private slots:

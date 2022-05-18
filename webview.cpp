@@ -62,4 +62,6 @@ QWebEngineView *WebView::createWindow( QWebEnginePage::WebWindowType type ) {
     return this;
 }
 
+bool WebView::event( QEvent *event ) { return QWidget::event( event ); }
+
 WebView::~WebView() {}

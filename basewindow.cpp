@@ -206,6 +206,7 @@ void BaseWindow::mouseMoveEvent( QMouseEvent *event ) {
 }
 
 void BaseWindow::mousePressEvent( QMouseEvent *event ) {
+    qDebug( "鼠标左键按下" );
     m_isMousePressed = true;
     // 当前鼠标进入了以上指定的8个区域，并且是左键按下时才开始进行窗口拉伸;
     if ( m_stretchRectState != NO_SELECT &&
