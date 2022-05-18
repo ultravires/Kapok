@@ -11,7 +11,7 @@
 
 Widget::Widget( QWidget *parent )
     : BaseWindow( parent ) {
-    initTitleBar();
+    setSupportStretch( true );
     JSBridge    *bridge     = new JSBridge( this );
     QWebChannel *webChannel = new QWebChannel();
     webChannel->registerObject( "bridge", bridge );
