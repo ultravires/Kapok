@@ -30,7 +30,7 @@ void Widget::initTitleBar() {
     //    m_titleBar->setTitleRoll();
     m_titleBar->setBackgroundColor( 255, 255, 255, true );
     m_titleBar->setTitleIcon( ":/icons/window/close.png" );
-    m_titleBar->setTitleContent( QStringLiteral( "即时通讯" ) );
+    m_titleBar->setTitleContent( QString::fromUtf8("即时通讯") );
     m_titleBar->setButtonType( MIN_MAX_BUTTON );
     m_titleBar->setTitleWidth( this->width() );
     // 控件置于顶层
