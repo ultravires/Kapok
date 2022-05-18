@@ -8,6 +8,8 @@ class WebPage : public QWebEnginePage {
   public:
     explicit WebPage( QObject *parent = nullptr );
     WebPage( QWebEngineProfile *profile, QObject *parent = nullptr );
+    void handleFeaturePermissionRequested( const QUrl &securityOrigin,
+                                           QWebEnginePage::Feature feature );
 
   protected:
     bool certificateError( const QWebEngineCertificateError &error );

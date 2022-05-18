@@ -5,8 +5,11 @@
 #include <QFileInfo>
 #include <QGridLayout>
 #include <QMainWindow>
+#include <QMouseEvent>
 #include <QWebChannel>
 #include <QWebEngineView>
+
+class QMouseEvent;
 
 class MainWindow : public QMainWindow {
     Q_OBJECT

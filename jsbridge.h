@@ -15,11 +15,34 @@ class JSBridge : public QObject {
     QWidget *widget;
   public slots:
     /**
-     * @brief showInfoMessageBox 显示信息框
+     * @brief message 信息框
      * @param title 标题
      * @param text 内容
      */
-    void showInfoMessageBox( QString title, QString text );
+    void message( QString title, QString message );
+
+    /**
+     * @brief question 询问框
+     * @param title 标题
+     * @param question 内容
+     * @return 是或否
+     */
+    bool question( QString title, QString question );
+
+    /**
+     * @brief confirm 确认框
+     * @param title 标题
+     * @param message 内容
+     * @return 是或否
+     */
+    bool confirm( QString title, QString message );
+
+    /**
+     * @brief warning 警告框
+     * @param title 标题
+     * @param message 内容
+     */
+    void warning( QString title, QString message );
 
     /**
      * @brief setFullScreen 设置窗口是否全屏化
@@ -59,6 +82,13 @@ class JSBridge : public QObject {
     void center();
 
     /**
+     * @brief move 移动窗口
+     * @param left 左边距
+     * @param top 右边距
+     */
+    void move( int left, int top );
+
+    /**
      * @brief close 关闭窗口
      */
     void close();
@@ -92,6 +122,19 @@ class JSBridge : public QObject {
      * @param title 标题
      */
     void setTitle( QString title );
+
+    /**
+     * @brief setResizable 设置是否可改变窗口大小
+     * @param resizable 是否可改变
+     */
+    void setResizable( bool resizable );
+
+    /**
+     * @brief resize 改变窗口大小
+     * @param width
+     * @param height
+     */
+    void resize( int width = 0, int height = 0 );
 };
 
 #endif // JSBRIDGE_H

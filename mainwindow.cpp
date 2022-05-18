@@ -16,25 +16,24 @@ MainWindow::MainWindow( QWidget *parent )
                      jsFileInfo.absoluteFilePath() );
     }
 
-    //    setWindowFlags( Qt::FramelessWindowHint | windowFlags() );
+    setWindowFlags( Qt::FramelessWindowHint | windowFlags() );
     setAttribute( Qt::WA_QuitOnClose, true );
-    // 设置窗口背景透明
     setAttribute( Qt::WA_TranslucentBackground, true );
     setStyleSheet( "background-color:transparent" );
     setAutoFillBackground( false );
 
     QUrl defaultURL = QUrl( "http://127.0.0.1:10086/#/login" );
 
-    Widget *widget = new Widget( this );
+    Widget *widget = new Widget();
     widget->resize( this->width(), this->height() );
-    widget->load( defaultURL );
+    widget->webview->load( defaultURL );
 
     QGridLayout *mainLayout = new QGridLayout();
     mainLayout->setContentsMargins( 0, 0, 0, 0 );
     mainLayout->addWidget( widget, 0, 0 );
 
     resize( 900, 600 );
-    QWidget *centralWidget = new QWidget( this );
+    QWidget *centralWidget = new QWidget();
     setCentralWidget( centralWidget );
     centralWidget->setLayout( mainLayout );
 }

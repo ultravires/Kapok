@@ -1,0 +1,6 @@
+<RCC>
+    <qresource prefix="/icons/window">
+        <file>close_white.png</file>
+        <file>maximize_white.png</file>
+    </qresource>
+</RCC>

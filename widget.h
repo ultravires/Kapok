@@ -1,27 +1,22 @@
 #ifndef WIDGET_H
 #define WIDGET_H
 
+#include "basewindow.h"
 #include "webview.h"
 #include <QMouseEvent>
 #include <QWidget>
 
 class QMouseEvent;
 
-class Widget : public WebView {
+class Widget : public BaseWindow {
     Q_OBJECT
   public:
     Widget( QWidget *parent = nullptr );
+    ~Widget();
+    void initTitleBar();
 
-  protected:
-    void mousePressEvent( QMouseEvent *event ) override;
-    void mouseMoveEvent( QMouseEvent *event ) override;
-    void mouseReleaseEvent( QMouseEvent *event ) override;
-
-  private:
-    bool   m_bDrag;
-    QPoint mouseStartPoint;
-    QPoint windowTopLeftPoint;
-
+  public:
+    WebView *webview = new WebView( this );
   signals:
 };
 

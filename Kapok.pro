@@ -1,4 +1,4 @@
-QT       += core gui network webenginecore webenginewidgets webchannel
+QT       += core gui network widgets webenginecore webenginewidgets webchannel quick
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -9,20 +9,28 @@ CONFIG += c++11
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
+    basewindow.cpp \
     global.cpp \
     jsbridge.cpp \
     main.cpp \
     mainwindow.cpp \
+    messagebox.cpp \
     requestmapper.cpp \
+    testnofocuswidget.cpp \
+    titlebar.cpp \
     webpage.cpp \
     webview.cpp \
     widget.cpp
 
 HEADERS += \
+    basewindow.h \
     global.h \
     jsbridge.h \
     mainwindow.h \
+    messagebox.h \
     requestmapper.h \
+    testnofocuswidget.h \
+    titlebar.h \
     webpage.h \
     webview.h \
     widget.h
@@ -47,3 +55,6 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 include(./QtWebApp/httpserver/httpserver.pri)
 include(./QtWebApp/logging/logging.pri)
 #include(./Browser/browser.pri)
+
+RESOURCES += \
+    icon.qrc

@@ -2,6 +2,9 @@
 #include "httplistener.h"
 #include "mainwindow.h"
 #include "requestmapper.h"
+#include "webpage.h"
+#include "webview.h"
+#include "widget.h"
 
 #include <QApplication>
 #include <QDir>
@@ -18,12 +21,14 @@ using namespace stefanfrings;
  * @return The valid filename
  */
 QString searchConfigFile() {
-    QString appName = QCoreApplication::applicationName();
+    QString binPath = QApplication::applicationFilePath();
+    QString appName = QApplication::applicationName();
     QFile   file;
-    file.setFileName( QDir::homePath() + "/.config/" + appName +
-                      "/etc/Config.ini" );
-    QString configFileName = QDir( file.fileName() ).canonicalPath();
-    qDebug( "using config file %s", qPrintable( configFileName ) );
+    file.setFileName( binPath + "/etc/Config.ini" );
+    if ( !file.exists() ) {
+        file.setFileName( QDir::homePath() + "/.config/" + appName +
+                          "/etc/Config.ini" );
+    }
     if ( file.exists() ) {
         QString configFileName = QDir( file.fileName() ).canonicalPath();
         qDebug( "using config file %s", qPrintable( configFileName ) );
@@ -79,7 +84,15 @@ int main( int argc, char *argv[] ) {
 
     qputenv( "QTWEBENGINE_REMOTE_DEBUGGING", "7777" );
 
-    MainWindow w;
-    w.show();
+    //    MainWindow win;
+    //    win.show();
+
+    QUrl defaultURL = QUrl( "http://127.0.0.1:10086/#/login" );
+
+    Widget *widget = new Widget();
+    widget->webview->load( defaultURL );
+    widget->resize( 900, 600 );
+    widget->show();
+
     return app.exec();
 }
