@@ -13,7 +13,6 @@ class Widget : public BaseWindow {
   public:
     Widget( QWidget *parent = nullptr );
     ~Widget();
-    void initTitleBar();
 
   public:
     WebView *webview = new WebView( this );

@@ -1,7 +1,6 @@
 #ifndef JSBRIDGE_H
 #define JSBRIDGE_H
 
-#include <QMessageBox>
 #include <QObject>
 #include <QWidget>
 
@@ -19,7 +18,7 @@ class JSBridge : public QObject {
      * @param title 标题
      * @param text 内容
      */
-    void message( QString title, QString message );
+    void message( const QString &title, const QString &message );
 
     /**
      * @brief question 询问框
@@ -27,7 +26,7 @@ class JSBridge : public QObject {
      * @param question 内容
      * @return 是或否
      */
-    bool question( QString title, QString question );
+    bool ask( QString title, QString question );
 
     /**
      * @brief confirm 确认框

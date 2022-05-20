@@ -2,6 +2,7 @@
 #define MESSAGEBOX_H
 
 #include "basewindow.h"
+#include <QEventLoop>
 #include <QMessageBox>
 #include <QWidget>
 
@@ -12,10 +13,24 @@ class MessageBox : BaseWindow {
     ~MessageBox();
 
   public:
-    int static success();
-    int static warning();
-    int static info();
-    int static error();
+    static void message( QWidget *parent, const QString &title,
+                         const QString &text );
+    static bool confirm( QWidget *parent, const QString &title,
+                         const QString &text );
+    static bool ask( QWidget *parent, const QString &title,
+                     const QString &text );
+
+  protected:
+    void paintEvent( QPaintEvent *event ) override;
+    void closeEvent( QCloseEvent *event ) override;
+
+  private:
+    bool        m_chooseResult;
+    QEventLoop *m_eventLoop = new QEventLoop( this );
+
+  private slots:
+    bool onCancelButtonClick() { return false; };
+    bool onConfirmButttonClick() { return true; };
 };
 
 #endif // MESSAGEBOX_H

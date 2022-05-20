@@ -1,5 +1,6 @@
 #include "jsbridge.h"
 #include "QtCore/qurl.h"
+#include "messagebox.h"
 #include "widget.h"
 
 #include <QApplication>
@@ -13,26 +14,16 @@ JSBridge::JSBridge( QWidget *widget )
     this->widget = widget;
 }
 
-void JSBridge::message( QString title, QString text ) {
-    QMessageBox::information( widget, title, text,
-                              QMessageBox::StandardButton::Ok );
+void JSBridge::message( const QString &title, const QString &text ) {
+    MessageBox::message( widget, title, text );
 }
 
-bool JSBridge::question( QString title, QString question ) {
-    if ( QMessageBox::question( widget, title, question ) ==
-         QMessageBox::Yes ) {
-        return true;
-    }
-    return false;
+bool JSBridge::ask( QString title, QString text ) {
+    return MessageBox::ask( widget, title, text );
 }
 
-bool JSBridge::confirm( QString title, QString question ) {
-    if ( QMessageBox::question( widget, title, question,
-                                QMessageBox::Cancel | QMessageBox::Ok ) ==
-         QMessageBox::Yes ) {
-        return true;
-    }
-    return false;
+bool JSBridge::confirm( QString title, QString text ) {
+    return MessageBox::confirm( widget, title, text );
 }
 
 void JSBridge::warning( QString title, QString message ) {
