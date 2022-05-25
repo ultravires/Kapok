@@ -1,6 +1,7 @@
 #ifndef WEBVIEW_H
 #define WEBVIEW_H
 
+#include <QContextMenuEvent>
 #include <QEvent>
 #include <QWebEngineView>
 
@@ -11,12 +12,12 @@ class WebView : public QWebEngineView {
     ~WebView();
 
   protected:
-    bool            event( QEvent *event ) override;
     QWebEngineView *createWindow( QWebEnginePage::WebWindowType type ) override;
+    void            contextMenuEvent( QContextMenuEvent            *) override;
 
   private slots:
-    void onRenderProcessTerminated(
-        QWebEnginePage::RenderProcessTerminationStatus, int );
+    void onCustomContextMenuRequested( QPoint );
+    void on_loadStarted();
 };
 
 #endif // WEBVIEW_H

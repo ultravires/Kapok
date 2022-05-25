@@ -16,10 +16,9 @@ BaseWindow::BaseWindow( QWidget *parent )
     setStyleSheet( "background-color:transparent" );
     setAutoFillBackground( false );
     setAttribute( Qt::WA_DeleteOnClose, true );
-}
-
-void BaseWindow::showEvent( QShowEvent *event ) {
-    return QWidget::showEvent( event );
+    setAttribute( Qt::WA_InputMethodEnabled, true );
+    setAttribute( Qt::WA_KeyCompression, true );
+    setFocusPolicy( Qt::WheelFocus );
 }
 
 void BaseWindow::center() {
@@ -31,19 +30,5 @@ void BaseWindow::center() {
     int top             = ( availableHeight - clientHeight ) / 2;
     this->move( left, top );
 }
-
-void BaseWindow::mouseMoveEvent( QMouseEvent *event ) {
-    return QWidget::mouseMoveEvent( event );
-}
-
-void BaseWindow::mousePressEvent( QMouseEvent *event ) {
-    return QWidget::mousePressEvent( event );
-}
-
-void BaseWindow::mouseReleaseEvent( QMouseEvent *event ) {
-    return QWidget::mouseReleaseEvent( event );
-}
-
-bool BaseWindow::event( QEvent *event ) { return QWidget::event( event ); }
 
 BaseWindow::~BaseWindow() {}

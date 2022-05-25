@@ -123,17 +123,16 @@ class JSBridge : public QObject {
     void setTitle( QString title );
 
     /**
-     * @brief setResizable 设置是否可改变窗口大小
-     * @param resizable 是否可改变
-     */
-    void setResizable( bool resizable );
-
-    /**
      * @brief resize 改变窗口大小
      * @param width
      * @param height
      */
     void resize( int width = 0, int height = 0 );
+
+    /**
+     * @brief show 显示窗口
+     */
+    void show();
 };
 
 #endif // JSBRIDGE_H

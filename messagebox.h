@@ -29,8 +29,8 @@ class MessageBox : BaseWindow {
     QEventLoop *m_eventLoop = new QEventLoop( this );
 
   private slots:
-    bool onCancelButtonClick() { return false; };
-    bool onConfirmButttonClick() { return true; };
+    void onCancelButtonClicked();
+    void onConfirmButtonClicked();
 };
 
 #endif // MESSAGEBOX_H

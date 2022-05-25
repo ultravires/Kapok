@@ -13,6 +13,9 @@ class WebPage : public QWebEnginePage {
 
   protected:
     bool certificateError( const QWebEngineCertificateError &error );
+
+  private slots:
+    void on_loadStarted();
 };
 
 #endif // WEBPAGE_H
