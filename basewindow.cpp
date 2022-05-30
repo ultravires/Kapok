@@ -1,6 +1,7 @@
 #include "basewindow.h"
 #include <QApplication>
 #include <QFile>
+#include <QGridLayout>
 #include <QPainter>
 #include <QPainterPath>
 #include <QScreen>
@@ -10,14 +11,12 @@
 
 BaseWindow::BaseWindow( QWidget *parent )
     : QWidget( parent ) {
-    setWindowFlags( Qt::Window | Qt::FramelessWindowHint |
-                    Qt::WindowMinimizeButtonHint );
-    setAttribute( Qt::WA_TranslucentBackground, true );
-    setStyleSheet( "background-color:transparent" );
-    setAutoFillBackground( false );
-    setAttribute( Qt::WA_DeleteOnClose, true );
-    //    setAttribute( Qt::WA_InputMethodEnabled, true );
-    //    setAttribute( Qt::WA_KeyCompression, true );
+    setWindowFlag( Qt::Widget );
+    setWindowFlag( Qt::FramelessWindowHint );
+    setAttribute( Qt::WA_TranslucentBackground );
+    setAttribute( Qt::WA_DeleteOnClose );
+    //        setAttribute( Qt::WA_InputMethodEnabled );
+    //    setAttribute( Qt::WA_KeyCompression );
     //    setFocusPolicy( Qt::WheelFocus );
 }
 
@@ -34,5 +33,21 @@ void BaseWindow::center() {
     int top  = ( availableHeight - clientHeight ) / 2;
     this->move( left, top );
 }
+
+bool BaseWindow::isResizable() { return this->m_resizable; }
+
+void BaseWindow::setResizable( bool resizable ) {
+    this->m_resizable = resizable;
+}
+
+void BaseWindow::resizeEvent( QResizeEvent *event ) {
+    if ( this->isResizable() ) {
+        event->accept();
+    } else {
+        event->ignore();
+    }
+}
+
+void BaseWindow::closeEvent( QCloseEvent *event ) { event->accept(); }
 
 BaseWindow::~BaseWindow() {}

@@ -8,11 +8,10 @@
 
 WebPage::WebPage( QObject *parent )
     : QWebEnginePage( parent ) {
-    qDebug( "Create a WebPage" );
-    connect( this, SIGNAL( loadStarted() ), this, SLOT( on_loadStarted() ) );
+    connect( this, SIGNAL( loadStarted() ), this, SLOT( loadStarted() ) );
 }
 
-void WebPage::on_loadStarted() {
+void WebPage::loadStarted() {
     //    QFile apiFile( ":/qtwebchannel/qwebchannel.js" ); // load the API from
     //    the resources if ( !apiFile.open( QIODevice::ReadOnly ) ) qDebug()
     //        << "Couldn't load Qt's QWebChannel API!";

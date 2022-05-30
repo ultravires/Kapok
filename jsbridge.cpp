@@ -224,9 +224,9 @@ void JSBridge::open( QString uniqueLabel, QString options ) {
         // 窗口是否具有默认边框和栏
         bool decorations =
             this->widget->windowFlags().testFlag( Qt::FramelessWindowHint );
-        // 窗口是否置顶
-        bool skipTaskbar = false;
         // 窗口图标是否在任务栏展示
+        bool skipTaskbar = false;
+        // 窗口是否置顶
         bool alwaysOnTop =
             this->widget->windowFlags().testFlag( Qt::WindowStaysOnTopHint );
         // 是否启用文件拖放
@@ -279,12 +279,16 @@ void JSBridge::open( QString uniqueLabel, QString options ) {
         if ( jsonObject.contains( "alwaysOnTop" ) ) {
             alwaysOnTop = jsonObject.value( "alwaysOnTop" ).toBool();
         }
+        if ( jsonObject.contains( "resizable" ) ) {
+            resizable = jsonObject.value( "resizable" ).toBool();
+        }
+        if ( jsonObject.contains( "skipTaskbar" ) ) {
+            skipTaskbar = jsonObject.value( "skipTaskbar" ).toBool();
+        }
         Widget *widget = new Widget();
         if ( decorations ) {
-            widget->setWindowFlag( Qt::Window, true );
             widget->setWindowFlag( Qt::FramelessWindowHint, true );
         } else {
-            widget->setWindowFlag( Qt::Window, true );
             widget->setWindowFlag( Qt::FramelessWindowHint, false );
         }
         if ( alwaysOnTop ) {
@@ -302,6 +306,7 @@ void JSBridge::open( QString uniqueLabel, QString options ) {
         widget->setMaximumWidth( maxWidth );
         widget->setMaximumHeight( maxHeight );
         widget->resize( width, height );
+        widget->setResizable( resizable );
         widget->move( x, y );
         if ( fullscreen ) {
             widget->showFullScreen();
