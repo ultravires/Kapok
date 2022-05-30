@@ -5,8 +5,6 @@
 #include "webview.h"
 #include "widget.h"
 
-#include <QGraphicsDropShadowEffect>
-
 MainWindow::MainWindow( QWidget *parent )
     : QMainWindow( parent ) {
     QFileInfo jsFileInfo( QDir::currentPath() + "/qwebchannel.js" );

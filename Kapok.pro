@@ -57,4 +57,5 @@ include(./QtWebApp/logging/logging.pri)
 #include(./Browser/browser.pri)
 
 RESOURCES += \
-    icon.qrc
+    icon.qrc \
+    resouces.qrc
