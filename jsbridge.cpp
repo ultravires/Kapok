@@ -54,12 +54,14 @@ void JSBridge::toggleMaximize() {
 bool JSBridge::isMaximize() { return widget->isMaximized(); }
 
 void JSBridge::center() {
-    int clientWidth     = widget->width();
-    int clientHeight    = widget->height();
-    int availableWidth  = widget->screen()->availableSize().width();
-    int availableHeight = widget->screen()->availableSize().height();
-    int left            = ( availableWidth - clientWidth ) / 2;
-    int top             = ( availableHeight - clientHeight ) / 2;
+    int clientWidth  = widget->width();
+    int clientHeight = widget->height();
+    int availableWidth =
+        QApplication::primaryScreen()->availableGeometry().width();
+    int availableHeight =
+        QApplication::primaryScreen()->availableGeometry().height();
+    int left = ( availableWidth - clientWidth ) / 2;
+    int top  = ( availableHeight - clientHeight ) / 2;
     widget->move( left, top );
 }
 
@@ -96,6 +98,10 @@ void JSBridge::resize( int width, int height ) {
 }
 
 void JSBridge::show() { widget->show(); }
+
+void JSBridge::setGeometry( int left, int top, int width, int height ) {
+    widget->setGeometry( left, top, width, height );
+}
 
 ///** Configuration for the window to create. */
 // interface WindowOptions {

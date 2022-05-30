@@ -2,6 +2,7 @@
 #define BASEWINDOW_H
 
 #include <QMouseEvent>
+#include <QPaintEvent>
 #include <QWidget>
 
 class QMouseEvent;

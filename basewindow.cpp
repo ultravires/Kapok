@@ -16,18 +16,22 @@ BaseWindow::BaseWindow( QWidget *parent )
     setStyleSheet( "background-color:transparent" );
     setAutoFillBackground( false );
     setAttribute( Qt::WA_DeleteOnClose, true );
-    setAttribute( Qt::WA_InputMethodEnabled, true );
-    setAttribute( Qt::WA_KeyCompression, true );
-    setFocusPolicy( Qt::WheelFocus );
+    //    setAttribute( Qt::WA_InputMethodEnabled, true );
+    //    setAttribute( Qt::WA_KeyCompression, true );
+    //    setFocusPolicy( Qt::WheelFocus );
 }
 
 void BaseWindow::center() {
-    int clientWidth     = this->width();
-    int clientHeight    = this->height();
-    int availableWidth  = this->screen()->availableSize().width();
-    int availableHeight = this->screen()->availableSize().height();
-    int left            = ( availableWidth - clientWidth ) / 2;
-    int top             = ( availableHeight - clientHeight ) / 2;
+    int clientWidth  = this->width();
+    int clientHeight = this->height();
+    int availableWidth =
+        QApplication::primaryScreen()->availableGeometry().width();
+    ;
+    int availableHeight =
+        QApplication::primaryScreen()->availableGeometry().height();
+    ;
+    int left = ( availableWidth - clientWidth ) / 2;
+    int top  = ( availableHeight - clientHeight ) / 2;
     this->move( left, top );
 }
 

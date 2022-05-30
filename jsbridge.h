@@ -133,6 +133,8 @@ class JSBridge : public QObject {
      * @brief show 显示窗口
      */
     void show();
+
+    void setGeometry( int left, int top, int width, int height );
 };
 
 #endif // JSBRIDGE_H

@@ -40,12 +40,6 @@ QString searchConfigFile() {
 int main( int argc, char *argv[] ) {
     QApplication app( argc, argv );
 
-    QFileInfo jsFileInfo( QDir::currentPath() + "/qwebchannel.js" );
-    if ( !jsFileInfo.exists() ) {
-        QFile::copy( ":/qtwebchannel/qwebchannel.js",
-                     jsFileInfo.absoluteFilePath() );
-    }
-
     // i18n
     QTranslator       translator;
     const QStringList uiLanguages = QLocale::system().uiLanguages();
@@ -90,7 +84,7 @@ int main( int argc, char *argv[] ) {
 
     qputenv( "QTWEBENGINE_REMOTE_DEBUGGING", "7777" );
 
-    QUrl defaultURL = QUrl( "http://127.0.0.1:10086/main/#/login" );
+    QUrl defaultURL = QUrl( "http://192.168.112.158:10086/main/#/login" );
 
     Widget *widget = new Widget();
     widget->webview->load( defaultURL );

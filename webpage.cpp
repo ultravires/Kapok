@@ -13,21 +13,18 @@ WebPage::WebPage( QObject *parent )
 }
 
 void WebPage::on_loadStarted() {
-    QFile apiFile(
-        ":/qtwebchannel/qwebchannel.js" ); // load the API from the resources
-    if ( !apiFile.open( QIODevice::ReadOnly ) )
-        qDebug() << "Couldn't load Qt's QWebChannel API!";
-    QString apiScript = QString::fromLocal8Bit( apiFile.readAll() );
-    apiFile.close();
+    //    QFile apiFile( ":/qtwebchannel/qwebchannel.js" ); // load the API from
+    //    the resources if ( !apiFile.open( QIODevice::ReadOnly ) ) qDebug()
+    //        << "Couldn't load Qt's QWebChannel API!";
+    //    QString apiScript = QString::fromLocal8Bit( apiFile.readAll() );
+    //    apiFile.close();
+    //    this->runJavaScript( apiScript );
 
-    this->runJavaScript( apiScript );
-
-    QFile coreScriptFile( ":/scripts/core.js" );
-    if ( !coreScriptFile.open( QIODevice::ReadOnly ) )
-        qDebug() << "Couldn't load Qt's core script!";
-    QString coreScript = QString::fromLocal8Bit( coreScriptFile.readAll() );
-    coreScriptFile.close();
-    this->runJavaScript( coreScript );
+    //    QFile coreScriptFile( ":/scripts/core.js" );
+    //    if ( !coreScriptFile.open( QIODevice::ReadOnly ) )
+    //        qDebug() << "Couldn't load Qt's core script!";
+    //    QString coreScript = QString::fromLocal8Bit( coreScriptFile.readAll()
+    //    ); coreScriptFile.close(); this->runJavaScript( coreScript );
 
     //    QString script = QString::fromLatin1(
     //        "new QWebChannel(window.qt.webChannelTransport, (channel) => {"
