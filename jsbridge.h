@@ -11,7 +11,7 @@ class JSBridge : public QObject {
     JSBridge( QWidget *widget );
 
   private:
-    QWidget *widget;
+    QWidget *m_widget;
   public slots:
     /**
      * @brief message 信息框
@@ -102,7 +102,7 @@ class JSBridge : public QObject {
      * @param uniqueLabel 窗口唯一标识
      * @param options JSON 字符串，窗口选项
      */
-    void open( QString uniqueLabel, QString options );
+    QWidget *open( QString uniqueLabel, QString options );
 
     /**
      * @brief setDecorations 设置窗口是否显示边框和栅栏
@@ -135,6 +135,8 @@ class JSBridge : public QObject {
     void show();
 
     void setGeometry( int left, int top, int width, int height );
+
+    void download( QString url );
 };
 
 #endif // JSBRIDGE_H
