@@ -84,7 +84,7 @@ int main( int argc, char *argv[] ) {
 
     qputenv( "QTWEBENGINE_REMOTE_DEBUGGING", "7777" );
 
-    QUrl defaultURL = QUrl( "http://192.168.112.158:10086/main/#/login" );
+    QUrl defaultURL = QUrl( "http://192.168.112.158:10086/#/login" );
 
     Widget *widget = new Widget();
     widget->webview->load( defaultURL );
