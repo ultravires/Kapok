@@ -1,6 +1,7 @@
 #include "jsbridge.h"
 #include "messagebox.h"
 #include "widget.h"
+#include "widgetcontext.h"
 
 #include <QApplication>
 #include <QJsonDocument>
@@ -10,64 +11,64 @@
 
 JSBridge::JSBridge( QWidget *widget )
     : QObject() {
-    this->widget = widget;
+    this->m_widget = widget;
 }
 
 void JSBridge::message( const QString &title, const QString &text ) {
-    MessageBox::message( widget, title, text );
+    MessageBox::message( m_widget, title, text );
 }
 
 bool JSBridge::ask( QString title, QString text ) {
-    return MessageBox::ask( widget, title, text );
+    return MessageBox::ask( m_widget, title, text );
 }
 
 bool JSBridge::confirm( QString title, QString text ) {
-    return MessageBox::confirm( widget, title, text );
+    return MessageBox::confirm( m_widget, title, text );
 }
 
 void JSBridge::warning( QString title, QString message ) {
-    QMessageBox::warning( widget, title, message );
+    QMessageBox::warning( m_widget, title, message );
 }
 
 void JSBridge::setFullScreen( bool isFullScreen ) {
     if ( isFullScreen ) {
-        widget->showFullScreen();
+        m_widget->showFullScreen();
     } else {
-        widget->showNormal();
+        m_widget->showNormal();
     }
 }
 
-void JSBridge::maximize() { widget->showMaximized(); }
+void JSBridge::maximize() { m_widget->showMaximized(); }
 
-void JSBridge::minimize() { widget->showMinimized(); }
+void JSBridge::minimize() { m_widget->showMinimized(); }
 
-void JSBridge::normal() { widget->showNormal(); }
+void JSBridge::normal() { m_widget->showNormal(); }
 
 void JSBridge::toggleMaximize() {
-    if ( widget->isMaximized() ) {
-        widget->showNormal();
+    if ( m_widget->isMaximized() ) {
+        m_widget->showNormal();
     } else {
-        widget->showMaximized();
+        m_widget->showMaximized();
     }
 }
 
-bool JSBridge::isMaximize() { return widget->isMaximized(); }
+bool JSBridge::isMaximize() { return m_widget->isMaximized(); }
 
 void JSBridge::center() {
-    int clientWidth  = widget->width();
-    int clientHeight = widget->height();
+    int clientWidth  = m_widget->width();
+    int clientHeight = m_widget->height();
     int availableWidth =
         QApplication::primaryScreen()->availableGeometry().width();
     int availableHeight =
         QApplication::primaryScreen()->availableGeometry().height();
     int left = ( availableWidth - clientWidth ) / 2;
     int top  = ( availableHeight - clientHeight ) / 2;
-    widget->move( left, top );
+    m_widget->move( left, top );
 }
 
-void JSBridge::move( int left, int top ) { widget->move( left, top ); }
+void JSBridge::move( int left, int top ) { m_widget->move( left, top ); }
 
-void JSBridge::close() { widget->close(); }
+void JSBridge::close() { m_widget->close(); }
 
 void JSBridge::quit() {
     qApp->setQuitOnLastWindowClosed( true );
@@ -77,30 +78,36 @@ void JSBridge::quit() {
 
 void JSBridge::setDecorations( bool decorations ) {
     if ( decorations ) {
-        widget->setWindowFlag( Qt::Window, true );
-        widget->setWindowFlag( Qt::FramelessWindowHint, false );
-        widget->show();
+        m_widget->setWindowFlag( Qt::Window, true );
+        m_widget->setWindowFlag( Qt::FramelessWindowHint, false );
+        m_widget->show();
     } else {
-        widget->setWindowFlag( Qt::Window, true );
-        widget->setWindowFlag( Qt::FramelessWindowHint, true );
-        widget->show();
+        m_widget->setWindowFlag( Qt::Window, true );
+        m_widget->setWindowFlag( Qt::FramelessWindowHint, true );
+        m_widget->show();
     }
 }
 
 bool JSBridge::isDecorations() {
-    return widget->windowFlags().testFlag( Qt::FramelessWindowHint );
+    return m_widget->windowFlags().testFlag( Qt::FramelessWindowHint );
 }
 
-void JSBridge::setTitle( QString title ) { widget->setWindowTitle( title ); }
+void JSBridge::setTitle( QString title ) { m_widget->setWindowTitle( title ); }
 
 void JSBridge::resize( int width, int height ) {
-    widget->resize( width, height );
+    m_widget->resize( width, height );
 }
 
-void JSBridge::show() { widget->show(); }
+void JSBridge::show() { m_widget->show(); }
 
 void JSBridge::setGeometry( int left, int top, int width, int height ) {
-    widget->setGeometry( left, top, width, height );
+    m_widget->setGeometry( left, top, width, height );
+}
+
+void JSBridge::download( QString url ) {
+    if ( url.isEmpty() ) {
+        return;
+    }
 }
 
 ///** Configuration for the window to create. */
@@ -151,7 +158,7 @@ void JSBridge::setGeometry( int left, int top, int width, int height ) {
 //      * enabled under `tauri.conf.json > tauri > macosPrivateApi`. WARNING:
 //      Using
 //      * private APIs on `macOS` prevents your application from being accepted
-//      for
+//      for*
 //      * the `App Store`.
 //      */
 //     transparent ?: boolean;
@@ -178,10 +185,18 @@ void JSBridge::setGeometry( int left, int top, int width, int height ) {
 //     fileDropEnabled ?: boolean;
 // }
 
-void JSBridge::open( QString uniqueLabel, QString options ) {
+QWidget *JSBridge::open( QString uniqueLabel, QString options ) {
     if ( uniqueLabel.isEmpty() ) {
-        return;
+        return nullptr;
     }
+    Widget *w = WidgetContext::getWidget( uniqueLabel );
+    if ( w != nullptr ) {
+        w->show();
+        w->activateWindow();
+        return w;
+    }
+    Widget *widget = new Widget();
+    WidgetContext::addWidget( uniqueLabel, widget );
     QJsonDocument jsonDocument =
         QJsonDocument::fromJson( options.toLocal8Bit().data() );
     if ( !jsonDocument.isNull() ) {
@@ -195,40 +210,40 @@ void JSBridge::open( QString uniqueLabel, QString options ) {
         // 距离屏幕上边的位置
         int y = 0;
         // 窗口的宽度
-        int width = this->widget->width();
+        int width = this->m_widget->width();
         // 窗口的高度
-        int height = this->widget->height();
+        int height = this->m_widget->height();
         // 窗口的最小宽度
-        int minWidth = this->widget->minimumWidth();
+        int minWidth = this->m_widget->minimumWidth();
         // 窗口的最小高度
-        int minHeight = this->widget->minimumHeight();
+        int minHeight = this->m_widget->minimumHeight();
         // 窗口的最大宽度
-        int maxWidth = this->widget->maximumWidth();
+        int maxWidth = this->m_widget->maximumWidth();
         // 窗口的最大高度
-        int maxHeight = this->widget->maximumHeight();
+        int maxHeight = this->m_widget->maximumHeight();
         // 是否可改变窗口大小
         bool resizable = false;
         // 窗口标题
-        QString title = this->widget->windowTitle();
+        QString title = this->m_widget->windowTitle();
         // 窗口是否全屏化
-        bool fullscreen = this->widget->isFullScreen();
+        bool fullscreen = this->m_widget->isFullScreen();
         // 窗口最初是隐藏还是聚焦
         bool focus = true;
         // 窗口是否透明
         bool transparent =
-            this->widget->testAttribute( Qt::WA_TranslucentBackground );
+            this->m_widget->testAttribute( Qt::WA_TranslucentBackground );
         // 窗口是否最大化
-        bool maximized = this->widget->isMaximized();
+        bool maximized = this->m_widget->isMaximized();
         // 窗口是否应在创建时立即可见
         bool visible = true;
         // 窗口是否具有默认边框和栏
         bool decorations =
-            this->widget->windowFlags().testFlag( Qt::FramelessWindowHint );
+            this->m_widget->windowFlags().testFlag( Qt::FramelessWindowHint );
         // 窗口图标是否在任务栏展示
         bool skipTaskbar = false;
         // 窗口是否置顶
         bool alwaysOnTop =
-            this->widget->windowFlags().testFlag( Qt::WindowStaysOnTopHint );
+            this->m_widget->windowFlags().testFlag( Qt::WindowStaysOnTopHint );
         // 是否启用文件拖放
         bool fileDropEnabled = true;
 
@@ -285,7 +300,6 @@ void JSBridge::open( QString uniqueLabel, QString options ) {
         if ( jsonObject.contains( "skipTaskbar" ) ) {
             skipTaskbar = jsonObject.value( "skipTaskbar" ).toBool();
         }
-        Widget *widget = new Widget();
         if ( decorations ) {
             widget->setWindowFlag( Qt::FramelessWindowHint, true );
         } else {
@@ -328,4 +342,5 @@ void JSBridge::open( QString uniqueLabel, QString options ) {
             widget->show();
         }
     }
+    return widget;
 }

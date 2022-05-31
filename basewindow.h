@@ -25,9 +25,13 @@ class BaseWindow : public QWidget {
 
   private:
     /**
-     * @brief m_resizable 是否能被改变窗口大小
+     * @brief m_resizable 窗口大小是否能被改变
      */
-    bool m_resizable = false;
+    bool m_resizable = true;
+    /**
+     * @brief m_movable 窗口位置是否能被移动
+     */
+    bool m_movable = true;
 };
 
 #endif // BASEWINDOW_H

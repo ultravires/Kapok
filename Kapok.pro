@@ -20,7 +20,8 @@ SOURCES += \
     titlebar.cpp \
     webpage.cpp \
     webview.cpp \
-    widget.cpp
+    widget.cpp \
+    widgetcontext.cpp
 
 HEADERS += \
     basewindow.h \
@@ -33,7 +34,8 @@ HEADERS += \
     titlebar.h \
     webpage.h \
     webview.h \
-    widget.h
+    widget.h \
+    widgetcontext.h
 
 FORMS += \
     mainwindow.ui
