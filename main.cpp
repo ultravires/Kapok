@@ -90,6 +90,7 @@ int main( int argc, char *argv[] ) {
     widget->webview->load( defaultURL );
     widget->resize( 900, 600 );
     widget->show();
+
     //    MainWindow *mainWindow = new MainWindow();
     //    mainWindow->show();
 

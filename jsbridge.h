@@ -1,17 +1,21 @@
 #ifndef JSBRIDGE_H
 #define JSBRIDGE_H
 
+#include "widget.h"
+
 #include <QObject>
 #include <QWidget>
 
 class JSBridge : public QObject {
     Q_OBJECT;
 
+    Q_PROPERTY( Widget *appWindow READ getCurrent );
+
   public:
-    JSBridge( QWidget *widget );
+    JSBridge( Widget *widget );
 
   private:
-    QWidget *m_widget;
+    Widget *m_widget;
   public slots:
     /**
      * @brief message 信息框
@@ -137,6 +141,11 @@ class JSBridge : public QObject {
     void setGeometry( int left, int top, int width, int height );
 
     void download( QString url );
+
+    /**
+     * @brief getCurrent 获取当前窗口
+     */
+    Widget *getCurrent();
 };
 
 #endif // JSBRIDGE_H

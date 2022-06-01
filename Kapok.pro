@@ -16,7 +16,6 @@ SOURCES += \
     mainwindow.cpp \
     messagebox.cpp \
     requestmapper.cpp \
-    testnofocuswidget.cpp \
     titlebar.cpp \
     webpage.cpp \
     webview.cpp \
@@ -30,7 +29,6 @@ HEADERS += \
     mainwindow.h \
     messagebox.h \
     requestmapper.h \
-    testnofocuswidget.h \
     titlebar.h \
     webpage.h \
     webview.h \

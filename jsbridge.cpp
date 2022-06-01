@@ -9,7 +9,7 @@
 #include <QScreen>
 #include <QUrl>
 
-JSBridge::JSBridge( QWidget *widget )
+JSBridge::JSBridge( Widget *widget )
     : QObject() {
     this->m_widget = widget;
 }
@@ -68,7 +68,13 @@ void JSBridge::center() {
 
 void JSBridge::move( int left, int top ) { m_widget->move( left, top ); }
 
-void JSBridge::close() { m_widget->close(); }
+void JSBridge::close() {
+    QString label = m_widget->property( "__label__" ).toString();
+    if ( !label.isEmpty() ) {
+        WidgetContext::removeWidget( label );
+    }
+    m_widget->close();
+}
 
 void JSBridge::quit() {
     qApp->setQuitOnLastWindowClosed( true );
@@ -110,6 +116,8 @@ void JSBridge::download( QString url ) {
     }
 }
 
+Widget *JSBridge::getCurrent() { return this->m_widget; }
+
 QWidget *JSBridge::open( QString uniqueLabel, QString options ) {
     if ( uniqueLabel.isEmpty() ) {
         return nullptr;
@@ -121,6 +129,7 @@ QWidget *JSBridge::open( QString uniqueLabel, QString options ) {
         return w;
     }
     Widget *widget = new Widget();
+    widget->setProperty( "__label__", uniqueLabel );
     WidgetContext::addWidget( uniqueLabel, widget );
     QJsonDocument jsonDocument =
         QJsonDocument::fromJson( options.toLocal8Bit().data() );

@@ -16,7 +16,6 @@ class Widget : public BaseWindow {
 
   public:
     WebView *webview = new WebView( this );
-  signals:
 };
 
 #endif // WIDGET_H
