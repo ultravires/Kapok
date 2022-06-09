@@ -12,10 +12,11 @@ class QMouseEvent;
 class BaseWindow : public QWidget {
     Q_OBJECT
 
+    Q_PROPERTY( bool resizable READ isResizable WRITE setResizable CONSTANT );
+
   public:
     BaseWindow( QWidget *parent = nullptr );
     ~BaseWindow();
-    void center();
     void setResizable( bool resizable );
     bool isResizable();
 
@@ -32,6 +33,10 @@ class BaseWindow : public QWidget {
      * @brief m_movable 窗口位置是否能被移动
      */
     bool m_movable = true;
+
+  public slots:
+    void center();
+    void setSize( int width, int height );
 };
 
 #endif // BASEWINDOW_H

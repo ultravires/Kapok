@@ -24,4 +24,9 @@ Widget::Widget( QWidget *parent )
     mainLayout->addWidget( this->webview );
 }
 
+void Widget::closeEvent( QCloseEvent *event ) {
+    this->webview->close();
+    event->accept();
+}
+
 Widget::~Widget() {}

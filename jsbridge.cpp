@@ -1,4 +1,5 @@
 #include "jsbridge.h"
+#include "global.h"
 #include "messagebox.h"
 #include "widget.h"
 #include "widgetcontext.h"
@@ -9,21 +10,28 @@
 #include <QScreen>
 #include <QUrl>
 
-JSBridge::JSBridge( QWidget *widget )
+JSBridge::JSBridge( Widget *widget )
     : QObject() {
     this->m_widget = widget;
 }
 
-void JSBridge::message( const QString &title, const QString &text ) {
-    MessageBox::message( m_widget, title, text );
+void JSBridge::message( const QString &title, const QString &text,
+                        bool isModal ) {
+    MessageBox::showMessageBox( m_widget, title, text, MessageBoxType::NoType,
+                                MessageBoxButton::ButtonConfirm, isModal );
 }
 
-bool JSBridge::ask( QString title, QString text ) {
-    return MessageBox::ask( m_widget, title, text );
+bool JSBridge::ask( const QString &title, const QString &text, bool isModal ) {
+    return MessageBox::showMessageBox(
+        m_widget, title, text, MessageBoxType::TypeQuestion,
+        MessageBoxButton::ButtonConfirm, isModal );
 }
 
-bool JSBridge::confirm( QString title, QString text ) {
-    return MessageBox::confirm( m_widget, title, text );
+bool JSBridge::confirm( const QString &title, const QString &text,
+                        bool isModal ) {
+    return MessageBox::showMessageBox(
+        m_widget, title, text, MessageBoxType::TypeInformation,
+        MessageBoxButton::ButtonConfirm, isModal );
 }
 
 void JSBridge::warning( QString title, QString message ) {
@@ -68,7 +76,13 @@ void JSBridge::center() {
 
 void JSBridge::move( int left, int top ) { m_widget->move( left, top ); }
 
-void JSBridge::close() { m_widget->close(); }
+void JSBridge::close() {
+    QString label = m_widget->property( "__label__" ).toString();
+    if ( !label.isEmpty() ) {
+        WidgetContext::removeWidget( label );
+    }
+    m_widget->close();
+}
 
 void JSBridge::quit() {
     qApp->setQuitOnLastWindowClosed( true );
@@ -110,6 +124,8 @@ void JSBridge::download( QString url ) {
     }
 }
 
+Widget *JSBridge::getCurrent() { return this->m_widget; }
+
 QWidget *JSBridge::open( QString uniqueLabel, QString options ) {
     if ( uniqueLabel.isEmpty() ) {
         return nullptr;
@@ -121,6 +137,7 @@ QWidget *JSBridge::open( QString uniqueLabel, QString options ) {
         return w;
     }
     Widget *widget = new Widget();
+    widget->setProperty( "__label__", uniqueLabel );
     WidgetContext::addWidget( uniqueLabel, widget );
     QJsonDocument jsonDocument =
         QJsonDocument::fromJson( options.toLocal8Bit().data() );
@@ -271,3 +288,7 @@ QWidget *JSBridge::open( QString uniqueLabel, QString options ) {
     }
     return widget;
 }
+
+QString JSBridge::getAppVersion() { return getKapokVersion(); }
+
+JSBridge::~JSBridge() {}

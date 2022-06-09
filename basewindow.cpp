@@ -1,9 +1,5 @@
 #include "basewindow.h"
 #include <QApplication>
-#include <QFile>
-#include <QGridLayout>
-#include <QPainter>
-#include <QPainterPath>
 #include <QScreen>
 
 #define STRETCH_RECT_HEIGHT 4 // 拉伸小矩形的高度;
@@ -15,9 +11,6 @@ BaseWindow::BaseWindow( QWidget *parent )
     setWindowFlag( Qt::FramelessWindowHint );
     setAttribute( Qt::WA_TranslucentBackground );
     setAttribute( Qt::WA_DeleteOnClose );
-    //        setAttribute( Qt::WA_InputMethodEnabled );
-    //    setAttribute( Qt::WA_KeyCompression );
-    //    setFocusPolicy( Qt::WheelFocus );
 }
 
 void BaseWindow::center() {
@@ -32,6 +25,10 @@ void BaseWindow::center() {
     int left = ( availableWidth - clientWidth ) / 2;
     int top  = ( availableHeight - clientHeight ) / 2;
     this->move( left, top );
+}
+
+void BaseWindow::setSize( int width, int height ) {
+    this->resize( width, height );
 }
 
 bool BaseWindow::isResizable() { return this->m_resizable; }
