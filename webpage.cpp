@@ -12,45 +12,12 @@ WebPage::WebPage( QObject *parent )
 }
 
 void WebPage::loadStarted() {
-    //    QFile apiFile( ":/qtwebchannel/qwebchannel.js" ); // load the API from
-    //    the resources if ( !apiFile.open( QIODevice::ReadOnly ) ) qDebug()
-    //        << "Couldn't load Qt's QWebChannel API!";
-    //    QString apiScript = QString::fromLocal8Bit( apiFile.readAll() );
-    //    apiFile.close();
-    //    this->runJavaScript( apiScript );
-
-    //        QFile coreScriptFile( ":/scripts/core.js" );
-    //        if ( !coreScriptFile.open( QIODevice::ReadOnly ) )
-    //            qDebug() << "Couldn't load Qt's core script!";
-    //        QString coreScript = QString::fromLocal8Bit(
-    //        coreScriptFile.readAll()
-    //        ); coreScriptFile.close(); this->runJavaScript( coreScript );
-
-    //    QString script = QString::fromLatin1(
-    //        "new QWebChannel(window.qt.webChannelTransport, (channel) => {"
-    //        "window.__QT_CHANNEL__ = channel;"
-    //        "})" );
-    //    this->runJavaScript( script );
-
-    //    QWebEngineScript script;
-    //    QString          name = "invoke_qwebchannel_script";
-    //    QString          s =
-    //        QString::fromLatin1( "(function() {"
-    //                             "    script =
-    //                             document.createElement('script');" "
-    //                             script.id = '%1';" "
-    //                             document.head.appendChild(script);" "
-    //                             script.innerText = `%2`;"
-    //                             "})()" )
-    //            .arg( name )
-    //            .arg( apiScript );
-    //    this->runJavaScript( s, QWebEngineScript::ApplicationWorld );
-    //    script.setName( name );
-    //    script.setSourceCode( s );
-    //    script.setInjectionPoint( QWebEngineScript::DocumentReady );
-    //    script.setRunsOnSubFrames( true );
-    //    script.setWorldId( QWebEngineScript::ApplicationWorld );
-    //    this->scripts().insert( script );
+    QFile coreScriptFile( ":/scripts/core.js" );
+    if ( !coreScriptFile.open( QIODevice::ReadOnly ) )
+        qDebug() << "Couldn't load Qt's core script!";
+    QString coreScript = QString::fromLocal8Bit( coreScriptFile.readAll() );
+    coreScriptFile.close();
+    this->runJavaScript( coreScript );
 }
 
 WebPage::WebPage( QWebEngineProfile *profile, QObject *parent )

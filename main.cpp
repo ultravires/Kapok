@@ -38,7 +38,14 @@ QString searchConfigFile() {
 }
 
 int main( int argc, char *argv[] ) {
+
+#ifdef __sw_64__
+    qputenv( "QTWEBENGINE_CHROMIUM_FLAGS", "--no-sandbox" );
+#endif
+
     QApplication app( argc, argv );
+    app.setApplicationName( "Kapok" );
+    app.setOrganizationName( "Programming enthusiast" );
 
     // i18n
     QTranslator       translator;
@@ -63,6 +70,8 @@ int main( int argc, char *argv[] ) {
 
     // Log the library version
     qDebug( "QtWebApp has version %s", getQtWebAppLibVersion() );
+    // Log the application version
+    qDebug( "Kapok has version: %s", getKapokVersion() );
 
     // Session store
     QSettings *sessionSettings =
@@ -82,17 +91,19 @@ int main( int argc, char *argv[] ) {
     listenerSettings->beginGroup( "listener" );
     new HttpListener( listenerSettings, new RequestMapper( &app ), &app );
 
+    // Remote server
+    QSettings *serverSettings =
+        new QSettings( configFileName, QSettings::IniFormat, &app );
+    serverSettings->beginGroup( "server" );
+
     qputenv( "QTWEBENGINE_REMOTE_DEBUGGING", "7777" );
 
-    QUrl defaultURL = QUrl( "http://192.168.112.158:10086/main/#/login" );
+    QUrl defaultURL = QUrl( "http://127.0.0.1:10086/main/#/login" );
 
     Widget *widget = new Widget();
     widget->webview->load( defaultURL );
     widget->resize( 900, 600 );
     widget->show();
-
-    //    MainWindow *mainWindow = new MainWindow();
-    //    mainWindow->show();
 
     return app.exec();
 }

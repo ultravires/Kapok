@@ -42,7 +42,8 @@ TRANSLATIONS += \
     Kapok_zh_CN.ts
 
 DISTFILES += \
-    etc/Config.ini
+    etc/Config.ini \
+    etc/Kapok.config.json
 
 CONFIG += lrelease
 CONFIG += embed_translations

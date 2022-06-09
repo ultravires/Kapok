@@ -9,10 +9,12 @@
 class JSBridge : public QObject {
     Q_OBJECT;
 
-    Q_PROPERTY( Widget *appWindow READ getCurrent );
+    Q_PROPERTY( Widget *appWindow READ getCurrent CONSTANT );
+    Q_PROPERTY( QString appVersion READ getAppVersion CONSTANT );
 
   public:
     JSBridge( Widget *widget );
+    ~JSBridge();
 
   private:
     Widget *m_widget;
@@ -22,7 +24,8 @@ class JSBridge : public QObject {
      * @param title 标题
      * @param text 内容
      */
-    void message( const QString &title, const QString &message );
+    void message( const QString &title, const QString &message,
+                  bool isModal = false );
 
     /**
      * @brief question 询问框
@@ -30,7 +33,8 @@ class JSBridge : public QObject {
      * @param question 内容
      * @return 是或否
      */
-    bool ask( QString title, QString question );
+    bool ask( const QString &title, const QString &question,
+              bool isModal = false );
 
     /**
      * @brief confirm 确认框
@@ -38,7 +42,8 @@ class JSBridge : public QObject {
      * @param message 内容
      * @return 是或否
      */
-    bool confirm( QString title, QString message );
+    bool confirm( const QString &title, const QString &message,
+                  bool isModal = false );
 
     /**
      * @brief warning 警告框
@@ -146,6 +151,12 @@ class JSBridge : public QObject {
      * @brief getCurrent 获取当前窗口
      */
     Widget *getCurrent();
+
+    /**
+     * @brief getVersion 当前客户端版本号
+     * @return 版本号
+     */
+    QString getAppVersion();
 };
 
 #endif // JSBRIDGE_H

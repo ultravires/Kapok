@@ -3,9 +3,11 @@
 
 #include "basewindow.h"
 #include "webview.h"
+#include <QCloseEvent>
 #include <QMouseEvent>
 #include <QWidget>
 
+class QCloseEvent;
 class QMouseEvent;
 
 class Widget : public BaseWindow {
@@ -16,6 +18,9 @@ class Widget : public BaseWindow {
 
   public:
     WebView *webview = new WebView( this );
+
+  protected:
+    void closeEvent( QCloseEvent *event ) override;
 };
 
 #endif // WIDGET_H

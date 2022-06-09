@@ -1,65 +1,59 @@
 #include "messagebox.h"
 #include <QButtonGroup>
+#include <QFont>
 #include <QHBoxLayout>
 #include <QLabel>
 #include <QPainter>
 #include <QPainterPath>
 #include <QPushButton>
 #include <QRect>
+#include <QSpacerItem>
 #include <QVBoxLayout>
 
-void MessageBox::message( QWidget *parent, const QString &title,
-                          const QString &text ) {
-    MessageBox *messageBox = new MessageBox( parent );
-    // 标题
-    QLabel      *titleLabel  = new QLabel( title );
-    QHBoxLayout *titleLayout = new QHBoxLayout();
-    titleLayout->addWidget( titleLabel );
-    // 内容
-    QLabel      *textLabel     = new QLabel( text );
-    QHBoxLayout *contentLayout = new QHBoxLayout();
-    contentLayout->addWidget( textLabel );
-    // 按钮
-    QPushButton *confirmButton = new QPushButton( tr( "Confirm" ) );
-    connect( confirmButton, SIGNAL( clicked() ), messageBox,
-             SLOT( onConfirmButtonClicked() ) );
-
-    QHBoxLayout *buttonLayout = new QHBoxLayout();
-    buttonLayout->addWidget( confirmButton );
-
-    QVBoxLayout *mainLayout = new QVBoxLayout( messageBox );
-    mainLayout->addLayout( titleLayout );
-    mainLayout->addLayout( contentLayout );
-    mainLayout->addLayout( buttonLayout );
-    messageBox->show();
-}
-
-bool MessageBox::confirm( QWidget *parent, const QString &title,
-                          const QString &text ) {
+int MessageBox::showMessageBox( QWidget *parent, const QString &title,
+                                const QString &text, MessageBoxType type,
+                                MessageBoxButton buttons, bool isModal ) {
     MessageBox *messageBox = new MessageBox( parent );
 
-    QLabel      *titleLabel  = new QLabel( title );
+    QLabel *titleLabel = new QLabel( title );
+    titleLabel->setFont( QFont( "AlibabaPuHuiTi-Medium" ) );
     QHBoxLayout *titleLayout = new QHBoxLayout();
     titleLayout->addWidget( titleLabel );
 
-    QLabel      *textLabel     = new QLabel( text );
+    QLabel *textLabel = new QLabel( text );
+    textLabel->setFont( QFont( "AlibabaPuHuiTi-Regular" ) );
     QHBoxLayout *contentLayout = new QHBoxLayout();
     contentLayout->addWidget( textLabel );
 
-    QPushButton *cancelButton = new QPushButton( tr( "取消" ) );
+    QPushButton *cancelButton = new QPushButton( QStringLiteral( "取消" ) );
+    cancelButton->setVisible( true );
     cancelButton->setFixedSize( 64, 32 );
     cancelButton->setStyleSheet(
         "background-color: #DBDCDE; border-radius: 4px; color: #fff" );
     connect( cancelButton, SIGNAL( clicked() ), messageBox,
              SLOT( onCancelButtonClicked() ) );
-    QPushButton *confirmButton = new QPushButton( tr( "确定" ) );
+    QPushButton *confirmButton = new QPushButton( QStringLiteral( "确认" ) );
+    confirmButton->setVisible( false );
     confirmButton->setFixedSize( 64, 32 );
     confirmButton->setStyleSheet(
         "background-color: #3180F6; border-radius: 4px; color: #fff" );
     connect( confirmButton, SIGNAL( clicked() ), messageBox,
              SLOT( onConfirmButtonClicked() ) );
+
+    switch ( buttons ) {
+    case MessageBoxButton::ButtonConfirm:
+        confirmButton->setVisible( true );
+        break;
+    case MessageBoxButton::ButtonCancel:
+        cancelButton->setVisible( true );
+        break;
+    default:
+        break;
+    }
+
     QHBoxLayout *buttonLayout = new QHBoxLayout();
-    buttonLayout->setAlignment( Qt::AlignRight );
+    buttonLayout->addSpacerItem(
+        new QSpacerItem( 0, 0, QSizePolicy::Expanding ) );
     buttonLayout->addWidget( cancelButton );
     buttonLayout->addWidget( confirmButton );
 
@@ -68,56 +62,31 @@ bool MessageBox::confirm( QWidget *parent, const QString &title,
     mainLayout->addLayout( titleLayout );
     mainLayout->addLayout( contentLayout );
     mainLayout->addLayout( buttonLayout );
-    messageBox->show();
-    messageBox->m_eventLoop->exec();
-    return messageBox->m_chooseResult;
-}
-
-bool MessageBox::ask( QWidget *parent, const QString &title,
-                      const QString &text ) {
-    MessageBox *messageBox = new MessageBox( parent );
-
-    QLabel      *titleLabel  = new QLabel( title );
-    QHBoxLayout *titleLayout = new QHBoxLayout();
-    titleLayout->addWidget( titleLabel );
-
-    QLabel      *textLabel     = new QLabel( text );
-    QHBoxLayout *contentLayout = new QHBoxLayout();
-    contentLayout->addWidget( textLabel );
-
-    QPushButton *cancelButton = new QPushButton( tr( "No" ) );
-    connect( cancelButton, SIGNAL( clicked() ), messageBox,
-             SLOT( onCancelButtonClicked() ) );
-    QPushButton *confirmButton = new QPushButton( tr( "Yes" ) );
-    connect( confirmButton, SIGNAL( clicked() ), messageBox,
-             SLOT( onConfirmButtonClicked() ) );
-    QHBoxLayout *buttonLayout = new QHBoxLayout();
-    buttonLayout->addWidget( cancelButton );
-    buttonLayout->addWidget( confirmButton );
-
-    QVBoxLayout *mainLayout = new QVBoxLayout( messageBox );
-    mainLayout->addLayout( titleLayout );
-    mainLayout->addLayout( contentLayout );
-    mainLayout->addLayout( buttonLayout );
-    messageBox->show();
-    messageBox->m_eventLoop->exec();
-    return messageBox->m_chooseResult;
+    if ( isModal ) {
+        messageBox->setWindowModality( Qt::WindowModal );
+        messageBox->exec();
+        return messageBox->m_chooseResult;
+    } else {
+        messageBox->show();
+    }
+    return 0;
 }
 
 MessageBox::MessageBox( QWidget *parent )
-    : BaseWindow( parent ) {
+    : QDialog( parent ) {
     setWindowFlags( Qt::Dialog | Qt::FramelessWindowHint );
     setAttribute( Qt::WA_QuitOnClose, true );
-    resize( 360, 160 );
+    setMinimumSize( 360, 160 );
+    //    resize( 360, 160 );
 }
 
 void MessageBox::onCancelButtonClicked() {
-    this->m_chooseResult = false;
+    this->m_chooseResult = MessageBoxButton::ButtonCancel;
     this->close();
 }
 
 void MessageBox::onConfirmButtonClicked() {
-    this->m_chooseResult = true;
+    this->m_chooseResult = MessageBoxButton::ButtonConfirm;
     this->close();
 }
 
