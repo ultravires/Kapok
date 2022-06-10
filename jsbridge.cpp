@@ -5,6 +5,7 @@
 #include "widgetcontext.h"
 
 #include <QApplication>
+#include <QDir>
 #include <QJsonDocument>
 #include <QJsonObject>
 #include <QScreen>
@@ -78,6 +79,7 @@ void JSBridge::move( int left, int top ) { m_widget->move( left, top ); }
 
 void JSBridge::close() {
     QString label = m_widget->property( "__label__" ).toString();
+    qDebug( "__label__ %s closed", qPrintable( label ) );
     if ( !label.isEmpty() ) {
         WidgetContext::removeWidget( label );
     }
@@ -125,6 +127,10 @@ void JSBridge::download( QString url ) {
 }
 
 Widget *JSBridge::getCurrent() { return this->m_widget; }
+
+Widget *JSBridge::getWindow( QString uniqueLabel ) {
+    return WidgetContext::getWidget( uniqueLabel );
+};
 
 QWidget *JSBridge::open( QString uniqueLabel, QString options ) {
     if ( uniqueLabel.isEmpty() ) {
@@ -180,7 +186,7 @@ QWidget *JSBridge::open( QString uniqueLabel, QString options ) {
         bool visible = true;
         // 窗口是否具有默认边框和栏
         bool decorations =
-            this->m_widget->windowFlags().testFlag( Qt::FramelessWindowHint );
+            !this->m_widget->windowFlags().testFlag( Qt::FramelessWindowHint );
         // 窗口图标是否在任务栏展示
         bool skipTaskbar = false;
         // 窗口是否置顶
@@ -243,9 +249,9 @@ QWidget *JSBridge::open( QString uniqueLabel, QString options ) {
             skipTaskbar = jsonObject.value( "skipTaskbar" ).toBool();
         }
         if ( decorations ) {
-            widget->setWindowFlag( Qt::FramelessWindowHint, true );
-        } else {
             widget->setWindowFlag( Qt::FramelessWindowHint, false );
+        } else {
+            widget->setWindowFlag( Qt::FramelessWindowHint, true );
         }
         if ( alwaysOnTop ) {
             widget->setWindowFlag( Qt::WindowStaysOnTopHint, true );

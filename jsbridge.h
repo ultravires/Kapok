@@ -18,6 +18,7 @@ class JSBridge : public QObject {
 
   private:
     Widget *m_widget;
+
   public slots:
     /**
      * @brief message 信息框
@@ -151,6 +152,13 @@ class JSBridge : public QObject {
      * @brief getCurrent 获取当前窗口
      */
     Widget *getCurrent();
+
+    /**
+     * @brief getWindow 根据唯一标识获取窗口
+     * @param uniqueLabel 唯一标识
+     * @return Widget
+     */
+    Widget *getWindow( QString uniqueLabel );
 
     /**
      * @brief getVersion 当前客户端版本号

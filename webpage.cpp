@@ -44,3 +44,5 @@ bool WebPage::certificateError( const QWebEngineCertificateError &error ) {
 #endif
     return true;
 }
+
+WebPage::~WebPage() {}

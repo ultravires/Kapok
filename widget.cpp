@@ -2,6 +2,7 @@
 #include "jsbridge.h"
 #include "webpage.h"
 #include "webview.h"
+#include "widgetcontext.h"
 
 #include <QGridLayout>
 #include <QJsonDocument>
@@ -25,6 +26,7 @@ Widget::Widget( QWidget *parent )
 }
 
 void Widget::closeEvent( QCloseEvent *event ) {
+    WidgetContext::removeWidget( property( "__label__" ).toString() );
     this->webview->close();
     event->accept();
 }

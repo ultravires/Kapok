@@ -21,10 +21,10 @@ using namespace stefanfrings;
  * @return The valid filename
  */
 QString searchConfigFile() {
-    QString binPath = QApplication::applicationFilePath();
+    QString dirPath = QApplication::applicationDirPath();
     QString appName = QApplication::applicationName();
     QFile   file;
-    file.setFileName( binPath + "/etc/Config.ini" );
+    file.setFileName( dirPath + "/etc/Config.ini" );
     if ( !file.exists() ) {
         file.setFileName( QDir::homePath() + "/.config/" + appName +
                           "/etc/Config.ini" );
@@ -95,10 +95,16 @@ int main( int argc, char *argv[] ) {
     QSettings *serverSettings =
         new QSettings( configFileName, QSettings::IniFormat, &app );
     serverSettings->beginGroup( "server" );
+    QString url = serverSettings->value( "url" ).toString();
 
     qputenv( "QTWEBENGINE_REMOTE_DEBUGGING", "7777" );
 
-    QUrl defaultURL = QUrl( "http://127.0.0.1:10086/main/#/login" );
+    QUrl defaultURL;
+    if ( url.trimmed().isEmpty() ) {
+        defaultURL = QUrl( "http://127.0.0.1:8080/" );
+    } else {
+        defaultURL = QUrl( url );
+    }
 
     Widget *widget = new Widget();
     widget->webview->load( defaultURL );

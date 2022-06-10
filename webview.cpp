@@ -8,6 +8,7 @@
 
 WebView::WebView( QWidget *parent )
     : QWebEngineView( parent ) {
+    setAttribute( Qt::WA_QuitOnClose );
 
     connect( this, SIGNAL( loadStarted() ), this, SLOT( on_loadStarted() ) );
 
