@@ -6,11 +6,6 @@ static QMap<QString, Widget *> map;
 
 WidgetContext::WidgetContext() {}
 
-WidgetContext *WidgetContext::instance() {
-    static WidgetContext s_context;
-    return &s_context;
-}
-
 void WidgetContext::addWidget( QString label, Widget *widget ) {
     map.insert( label, widget );
 }

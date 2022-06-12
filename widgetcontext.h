@@ -5,11 +5,10 @@
 
 class WidgetContext {
   public:
-    static WidgetContext *instance();
-    static void           addWidget( QString label, Widget *widget );
-    static void           removeWidget( QString label );
-    static Widget        *getWidget( QString label );
-    static void           clear();
+    static void    addWidget( QString label, Widget *widget );
+    static void    removeWidget( QString label );
+    static Widget *getWidget( QString label );
+    static void    clear();
 
   private:
     WidgetContext();

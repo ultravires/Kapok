@@ -7,6 +7,7 @@ class WebPage : public QWebEnginePage {
     Q_OBJECT
   public:
     explicit WebPage( QObject *parent = nullptr );
+    ~WebPage();
     WebPage( QWebEngineProfile *profile, QObject *parent = nullptr );
     void handleFeaturePermissionRequested( const QUrl &securityOrigin,
                                            QWebEnginePage::Feature feature );
