@@ -132,6 +132,8 @@ void JSBridge::download( QString url ) {
     DownloadManager manager;
     manager.append( QUrl( url ) );
 
+    // TODO 开始下载任务
+
     //    QObject::connect( &manager, &DownloadManager::finished, &app,
     //                      &QCoreApplication::quit );
 }
