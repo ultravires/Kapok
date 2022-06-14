@@ -17,7 +17,7 @@ class WebView : public QWebEngineView {
 
   private slots:
     void onCustomContextMenuRequested( QPoint );
-    void on_loadStarted();
+    void on_loadFinished( bool finished );
 };
 
 #endif // WEBVIEW_H

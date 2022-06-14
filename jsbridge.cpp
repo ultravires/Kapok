@@ -1,4 +1,5 @@
 #include "jsbridge.h"
+#include "downloadmanager.h"
 #include "global.h"
 #include "messagebox.h"
 #include "widget.h"
@@ -9,11 +10,13 @@
 #include <QJsonDocument>
 #include <QJsonObject>
 #include <QScreen>
+#include <QStringList>
 #include <QUrl>
 
 JSBridge::JSBridge( Widget *widget )
     : QObject() {
     this->m_widget = widget;
+    connect( this, SIGNAL( URLChanged() ), SLOT( onURLChanged() ) );
 }
 
 void JSBridge::message( const QString &title, const QString &text,
@@ -121,9 +124,16 @@ void JSBridge::setGeometry( int left, int top, int width, int height ) {
 }
 
 void JSBridge::download( QString url ) {
+    using namespace std;
     if ( url.isEmpty() ) {
         return;
     }
+
+    DownloadManager manager;
+    manager.append( QUrl( url ) );
+
+    //    QObject::connect( &manager, &DownloadManager::finished, &app,
+    //                      &QCoreApplication::quit );
 }
 
 Widget *JSBridge::getCurrent() { return this->m_widget; }
@@ -297,4 +307,61 @@ QWidget *JSBridge::open( QString uniqueLabel, QString options ) {
 
 QString JSBridge::getAppVersion() { return getKapokVersion(); }
 
-JSBridge::~JSBridge() {}
+// url
+void JSBridge::setURL( QString url ) {
+    QString    configFileName = config->getConfigFileName();
+    QSettings *serverSettings =
+        new QSettings( configFileName, QSettings::IniFormat );
+    serverSettings->beginGroup( "server" );
+    serverSettings->setValue( "url", url );
+}
+
+QString JSBridge::getURL() {
+    QString    configFileName = config->getConfigFileName();
+    QSettings *serverSettings =
+        new QSettings( configFileName, QSettings::IniFormat );
+    serverSettings->beginGroup( "server" );
+    return serverSettings->value( "url" ).toString();
+}
+
+void JSBridge::onURLChanged() { qDebug( "URL Changed" ); }
+
+// server
+void JSBridge::setServer( QString url ) {
+    QString    configFileName = config->getConfigFileName();
+    QSettings *serverSettings =
+        new QSettings( configFileName, QSettings::IniFormat );
+    serverSettings->beginGroup( "server" );
+    serverSettings->setValue( "server", url );
+}
+
+QString JSBridge::getServer() {
+    QString    configFileName = config->getConfigFileName();
+    QSettings *serverSettings =
+        new QSettings( configFileName, QSettings::IniFormat );
+    serverSettings->beginGroup( "server" );
+    return serverSettings->value( "server" ).toString();
+}
+
+void JSBridge::onServerChanged() { qDebug( "Server Changed" ); }
+
+// websocket
+void JSBridge::setWebsocketURL( QString url ) {
+    QString    configFileName = config->getConfigFileName();
+    QSettings *serverSettings =
+        new QSettings( configFileName, QSettings::IniFormat );
+    serverSettings->beginGroup( "server" );
+    serverSettings->setValue( "websocket", url );
+}
+
+QString JSBridge::getWebsocketURL() {
+    QString    configFileName = config->getConfigFileName();
+    QSettings *serverSettings =
+        new QSettings( configFileName, QSettings::IniFormat );
+    serverSettings->beginGroup( "server" );
+    return serverSettings->value( "websocket" ).toString();
+}
+
+void JSBridge::onWebsocketURLChanged() { qDebug( "Websocket URL Changed" ); }
+
+JSBridge::~JSBridge() { delete m_widget; }

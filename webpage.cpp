@@ -7,23 +7,17 @@
 #include <QWebEngineScriptCollection>
 
 WebPage::WebPage( QObject *parent )
-    : QWebEnginePage( parent ) {
-    connect( this, SIGNAL( loadStarted() ), this, SLOT( loadStarted() ) );
-}
-
-void WebPage::loadStarted() {
-    QFile coreScriptFile( ":/scripts/core.js" );
-    if ( !coreScriptFile.open( QIODevice::ReadOnly ) )
-        qDebug() << "Couldn't load Qt's core script!";
-    QString coreScript = QString::fromLocal8Bit( coreScriptFile.readAll() );
-    coreScriptFile.close();
-    this->runJavaScript( coreScript );
-}
+    : QWebEnginePage( parent ) {}
 
 WebPage::WebPage( QWebEngineProfile *profile, QObject *parent )
     : QWebEnginePage( profile, parent ) {
-    connect( this, &QWebEnginePage::featurePermissionRequested, this,
-             &WebPage::handleFeaturePermissionRequested );
+    connect( this, SIGNAL( featurePermissionRequested() ),
+             SLOT( handleFeaturePermissionRequested() ) );
+#if QT_VERSION >= QT_VERSION_CHECK( 6, 0, 0 )
+    connect(
+        this, SIGNAL( certificateError( const QWebEngineCertificateError ) ),
+        SLOT( handleCertificateError( const QWebEngineCertificateError ) ) );
+#endif
 }
 
 void WebPage::handleFeaturePermissionRequested(
@@ -31,6 +25,22 @@ void WebPage::handleFeaturePermissionRequested(
     setFeaturePermission( securityOrigin, feature, PermissionGrantedByUser );
 }
 
+// https://doc.qt.io/qt-6/qwebenginepage.html#certificateError
+bool WebPage::handleCertificateError(
+    const QWebEngineCertificateError &error ) {
+#if QT_VERSION < QT_VERSION_CHECK( 6, 0, 0 )
+    qDebug( "%s %s %s", qPrintable( error.url().toString() ),
+            qPrintable( tr( "Certificate Error" ) ),
+            qPrintable( error.errorDescription() ) );
+#else
+    qDebug( "%s %s %s", qPrintable( error.url().toString() ),
+            qPrintable( tr( "Certificate Error" ) ),
+            qPrintable( error.description() ) );
+#endif
+    return true;
+}
+
+#if QT_VERSION < QT_VERSION_CHECK( 6, 0, 0 )
 // https://doc.qt.io/qt-5/qwebenginepage.html#certificateError
 bool WebPage::certificateError( const QWebEngineCertificateError &error ) {
 #if QT_VERSION < QT_VERSION_CHECK( 6, 0, 0 )
@@ -44,5 +54,6 @@ bool WebPage::certificateError( const QWebEngineCertificateError &error ) {
 #endif
     return true;
 }
+#endif
 
 WebPage::~WebPage() {}

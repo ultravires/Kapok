@@ -1,6 +1,7 @@
 #ifndef JSBRIDGE_H
 #define JSBRIDGE_H
 
+#include "global.h"
 #include "widget.h"
 
 #include <QObject>
@@ -11,6 +12,11 @@ class JSBridge : public QObject {
 
     Q_PROPERTY( Widget *appWindow READ getCurrent CONSTANT );
     Q_PROPERTY( QString appVersion READ getAppVersion CONSTANT );
+    Q_PROPERTY( QString url READ getURL WRITE setURL NOTIFY URLChanged );
+    Q_PROPERTY(
+        QString server READ getServer WRITE setServer NOTIFY serverChanged );
+    Q_PROPERTY( QString websocketURL READ getWebsocketURL WRITE setWebsocketURL
+                    NOTIFY websocketURLChanged );
 
   public:
     JSBridge( Widget *widget );
@@ -18,6 +24,11 @@ class JSBridge : public QObject {
 
   private:
     Widget *m_widget;
+
+  signals:
+    void URLChanged();
+    void serverChanged();
+    void websocketURLChanged();
 
   public slots:
     /**
@@ -146,6 +157,10 @@ class JSBridge : public QObject {
 
     void setGeometry( int left, int top, int width, int height );
 
+    /**
+     * @brief download 文件下载
+     * @param url 文件地址
+     */
     void download( QString url );
 
     /**
@@ -165,6 +180,24 @@ class JSBridge : public QObject {
      * @return 版本号
      */
     QString getAppVersion();
+
+    QString getURL();
+
+    void setURL( QString url );
+
+    void onURLChanged();
+
+    QString getServer();
+
+    void setServer( QString url );
+
+    void onServerChanged();
+
+    QString getWebsocketURL();
+
+    void setWebsocketURL( QString url );
+
+    void onWebsocketURLChanged();
 };
 
 #endif // JSBRIDGE_H

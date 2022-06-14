@@ -10,6 +10,7 @@ CONFIG += c++11
 
 SOURCES += \
     basewindow.cpp \
+    config.cpp \
     global.cpp \
     jsbridge.cpp \
     main.cpp \
@@ -24,6 +25,7 @@ SOURCES += \
 
 HEADERS += \
     basewindow.h \
+    config.h \
     global.h \
     jsbridge.h \
     mainwindow.h \
@@ -55,6 +57,7 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 
 include(./QtWebApp/httpserver/httpserver.pri)
 include(./QtWebApp/logging/logging.pri)
+include(./QtWebApp/downloadmanager/downloadmanager.pri)
 #include(./Browser/browser.pri)
 
 RESOURCES += \

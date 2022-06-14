@@ -1,5 +1,6 @@
 #include "webview.h"
 
+#include <QFile>
 #include <QMenu>
 #include <QTimer>
 #include <QWebEngineProfile>
@@ -10,7 +11,8 @@ WebView::WebView( QWidget *parent )
     : QWebEngineView( parent ) {
     setAttribute( Qt::WA_QuitOnClose );
 
-    connect( this, SIGNAL( loadStarted() ), this, SLOT( on_loadStarted() ) );
+    connect( this, SIGNAL( loadFinished( bool ) ), this,
+             SLOT( on_loadFinished( bool ) ) );
 
     // https://doc.qt.io/qt-5/qt.html#ContextMenuPolicy-enum
     this->setContextMenuPolicy( Qt::NoContextMenu );
@@ -75,6 +77,15 @@ void WebView::contextMenuEvent( QContextMenuEvent * ) {}
 
 void WebView::onCustomContextMenuRequested( QPoint ) {}
 
-void WebView::on_loadStarted() { qDebug( "webView loadStarted" ); }
+void WebView::on_loadFinished( bool finished ) {
+    if ( finished ) {
+        QFile coreScriptFile( ":/scripts/core.js" );
+        if ( !coreScriptFile.open( QIODevice::ReadOnly ) )
+            qDebug() << "Couldn't load Qt's core script!";
+        QString coreScript = QString::fromLocal8Bit( coreScriptFile.readAll() );
+        coreScriptFile.close();
+        this->page()->runJavaScript( coreScript );
+    }
+}
 
 WebView::~WebView() {}

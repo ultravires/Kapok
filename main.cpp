@@ -15,33 +15,9 @@
 
 using namespace stefanfrings;
 
-/**
- * Search the configuration file.
- * Aborts the application if not found.
- * @return The valid filename
- */
-QString searchConfigFile() {
-    QString dirPath = QApplication::applicationDirPath();
-    QString appName = QApplication::applicationName();
-    QFile   file;
-    file.setFileName( dirPath + "/etc/Config.ini" );
-    if ( !file.exists() ) {
-        file.setFileName( QDir::homePath() + "/.config/" + appName +
-                          "/etc/Config.ini" );
-    }
-    if ( file.exists() ) {
-        QString configFileName = QDir( file.fileName() ).canonicalPath();
-        qDebug( "using config file %s", qPrintable( configFileName ) );
-        return configFileName;
-    }
-    return "";
-}
-
 int main( int argc, char *argv[] ) {
 
-#ifdef __sw_64__
     qputenv( "QTWEBENGINE_CHROMIUM_FLAGS", "--no-sandbox" );
-#endif
 
     QApplication app( argc, argv );
     app.setApplicationName( "Kapok" );
@@ -59,7 +35,8 @@ int main( int argc, char *argv[] ) {
     }
 
     // Load the configuration file
-    QString configFileName = searchConfigFile();
+    config                 = new Config();
+    QString configFileName = config->getConfigFileName();
 
     // Configure logging
     QSettings *logSettings =
@@ -103,7 +80,7 @@ int main( int argc, char *argv[] ) {
     if ( url.trimmed().isEmpty() ) {
         defaultURL = QUrl( "http://127.0.0.1:8080/" );
     } else {
-        defaultURL = QUrl( url );
+        defaultURL = QUrl( url.trimmed() );
     }
 
     Widget *widget = new Widget();
