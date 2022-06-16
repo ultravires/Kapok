@@ -198,6 +198,20 @@ class JSBridge : public QObject {
     void setWebsocketURL( QString url );
 
     void onWebsocketURLChanged();
+
+    /**
+     * @brief save 打开文件/文件夹保存对话框
+     * @return 路径
+     */
+    QString save( QVariant &options );
+
+    /**
+     * @brief downloadDir 返回用户下载目录的路径
+     * @return 下载目录
+     */
+    QString downloadDir();
+
+    //    void writeBinaryFile( QString path, QByteArray byteArray );
 };
 
 #endif // JSBRIDGE_H

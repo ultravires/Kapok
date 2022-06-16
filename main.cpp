@@ -20,6 +20,7 @@ int main( int argc, char *argv[] ) {
     qputenv( "QTWEBENGINE_CHROMIUM_FLAGS", "--no-sandbox" );
 
     QApplication app( argc, argv );
+    app.setWindowIcon( QIcon( ":icon/logo@128x128.ico" ) );
     app.setApplicationName( "Kapok" );
     app.setOrganizationName( "Programming enthusiast" );
 
