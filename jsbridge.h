@@ -211,7 +211,7 @@ class JSBridge : public QObject {
      */
     QString downloadDir();
 
-    //    void writeBinaryFile( QString path, QByteArray byteArray );
+    void writeBinaryFile( QString path, QVariant &v );
 };
 
 #endif // JSBRIDGE_H

@@ -6,6 +6,7 @@
 #include "widgetcontext.h"
 
 #include <QApplication>
+#include <QBitArray>
 #include <QDir>
 #include <QFileDialog>
 #include <QJsonDocument>
@@ -384,8 +385,21 @@ QString JSBridge::downloadDir() {
     return QDir::homePath().append( "/Downloads" );
 }
 
-// void JSBridge::writeBinaryFile( QString path, QByteArray byteArray ) {
-//     // TODO 写文件到 path
-// }
+void JSBridge::writeBinaryFile( QString path, QVariant &v ) {
+    QJsonObject                 jsonObject = v.toJsonObject();
+    QJsonObject::const_iterator it         = jsonObject.constBegin();
+    QJsonObject::const_iterator end        = jsonObject.constEnd();
+
+    QByteArray byteArray;
+    while ( it != end ) {
+        byteArray.append( it.value().toInt() );
+        it++;
+    }
+
+    QFile file( path );
+    file.open( QIODevice::WriteOnly );
+    file.write( byteArray );
+    file.close();
+}
 
 JSBridge::~JSBridge() { delete m_widget; }
