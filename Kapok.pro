@@ -58,7 +58,7 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 include(./QtWebApp/httpserver/httpserver.pri)
 include(./QtWebApp/logging/logging.pri)
 include(./QtWebApp/downloadmanager/downloadmanager.pri)
-#include(./Browser/browser.pri)
+#include(./Clipboard/clipboard.pri)
 
 RESOURCES += \
     icon.qrc \

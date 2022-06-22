@@ -181,6 +181,17 @@ class JSBridge : public QObject {
      */
     QString getAppVersion();
 
+    /**
+     * @brief clipboardText 获取剪贴板中的文本
+     * @return
+     */
+    QString readClipboardText();
+
+    /**
+     * @brief writeClipboardText 向剪贴板写入文本
+     */
+    void writeClipboardText( QString text );
+
     QString getURL();
 
     void setURL( QString url );

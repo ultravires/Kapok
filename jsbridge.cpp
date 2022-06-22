@@ -7,6 +7,7 @@
 
 #include <QApplication>
 #include <QBitArray>
+#include <QClipboard>
 #include <QDir>
 #include <QFileDialog>
 #include <QJsonDocument>
@@ -304,6 +305,16 @@ QWidget *JSBridge::open( QString uniqueLabel, QString options ) {
 }
 
 QString JSBridge::getAppVersion() { return getKapokVersion(); }
+
+QString JSBridge::readClipboardText() {
+    QClipboard *clipboard = QApplication::clipboard();
+    return clipboard->text();
+}
+
+void JSBridge::writeClipboardText( QString text ) {
+    QClipboard *clipboard = QApplication::clipboard();
+    clipboard->setText( text );
+}
 
 // url
 void JSBridge::setURL( QString url ) {
