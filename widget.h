@@ -22,8 +22,6 @@ class Widget : public BaseWindow {
     WebView *webview = new WebView( this );
 
   protected:
-    void enterEvent( QEnterEvent *event ) override;
-    void leaveEvent( QEvent *event ) override;
     void closeEvent( QCloseEvent *event ) override;
 };
 

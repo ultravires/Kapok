@@ -25,10 +25,6 @@ Widget::Widget( QWidget *parent )
     mainLayout->addWidget( this->webview );
 }
 
-void Widget::enterEvent( QEnterEvent *event ) { event->accept(); }
-
-void Widget::leaveEvent( QEvent *event ) { event->accept(); }
-
 void Widget::closeEvent( QCloseEvent *event ) {
     WidgetContext::removeWidget( property( "__label__" ).toString() );
     this->webview->close();
