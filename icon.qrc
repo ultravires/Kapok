@@ -3,4 +3,8 @@
         <file>close_white.png</file>
         <file>maximize_white.png</file>
     </qresource>
+    <qresource prefix="/icon">
+        <file>logo.png</file>
+        <file>logo@128x128.ico</file>
+    </qresource>
 </RCC>

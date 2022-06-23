@@ -181,6 +181,17 @@ class JSBridge : public QObject {
      */
     QString getAppVersion();
 
+    /**
+     * @brief clipboardText 获取剪贴板中的文本
+     * @return
+     */
+    QString readClipboardText();
+
+    /**
+     * @brief writeClipboardText 向剪贴板写入文本
+     */
+    void writeClipboardText( QString text );
+
     QString getURL();
 
     void setURL( QString url );
@@ -198,6 +209,20 @@ class JSBridge : public QObject {
     void setWebsocketURL( QString url );
 
     void onWebsocketURLChanged();
+
+    /**
+     * @brief save 打开文件/文件夹保存对话框
+     * @return 路径
+     */
+    QString save( QVariant &options );
+
+    /**
+     * @brief downloadDir 返回用户下载目录的路径
+     * @return 下载目录
+     */
+    QString downloadDir();
+
+    void writeBinaryFile( QString path, QVariant &v );
 };
 
 #endif // JSBRIDGE_H

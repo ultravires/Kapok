@@ -28,32 +28,31 @@ WebView::WebView( QWidget *parent )
 
     // https://doc.qt.io/qt-6/qwebenginesettings.html#WebAttribute-enum
     // https://doc.qt.io/qt-5/qwebenginesettings.html#WebAttribute-enum
-    this->settings()->setAttribute( QWebEngineSettings::LocalStorageEnabled,
-                                    true );
-    this->settings()->setAttribute(
+    this->page()->settings()->setAttribute(
+        QWebEngineSettings::LocalStorageEnabled, true );
+    this->page()->settings()->setAttribute(
         QWebEngineSettings::FullScreenSupportEnabled, true );
     // see also:
     // https://doc.qt.io/qt-6/qtwebengine-features.html#pepper-plugin-api
-    this->settings()->setAttribute( QWebEngineSettings::PluginsEnabled, true );
-    this->settings()->setAttribute( QWebEngineSettings::ErrorPageEnabled,
-                                    true );
-    this->settings()->setAttribute(
+    this->page()->settings()->setAttribute( QWebEngineSettings::PluginsEnabled,
+                                            true );
+    this->page()->settings()->setAttribute(
+        QWebEngineSettings::ErrorPageEnabled, true );
+    this->page()->settings()->setAttribute(
         QWebEngineSettings::LocalContentCanAccessRemoteUrls, true );
-    this->settings()->setAttribute(
+    this->page()->settings()->setAttribute(
         QWebEngineSettings::JavascriptCanAccessClipboard, true );
-    this->settings()->setAttribute( QWebEngineSettings::JavascriptCanPaste,
-                                    true );
-    this->settings()->setAttribute(
+    this->page()->settings()->setAttribute(
+        QWebEngineSettings::JavascriptCanPaste, true );
+    this->page()->settings()->setAttribute(
         QWebEngineSettings::AllowRunningInsecureContent, true );
-    this->settings()->setAttribute(
+    this->page()->settings()->setAttribute(
         QWebEngineSettings::AllowWindowActivationFromJavaScript, true );
-    this->settings()->setAttribute( QWebEngineSettings::JavascriptCanPaste,
-                                    true );
-    this->settings()->setAttribute( QWebEngineSettings::ScrollAnimatorEnabled,
-                                    true );
-    this->settings()->setAttribute( QWebEngineSettings::ScreenCaptureEnabled,
-                                    true );
-    this->settings()->setUnknownUrlSchemePolicy(
+    this->page()->settings()->setAttribute(
+        QWebEngineSettings::ScrollAnimatorEnabled, true );
+    this->page()->settings()->setAttribute(
+        QWebEngineSettings::ScreenCaptureEnabled, true );
+    this->page()->settings()->setUnknownUrlSchemePolicy(
         QWebEngineSettings::AllowAllUnknownUrlSchemes );
 }
 

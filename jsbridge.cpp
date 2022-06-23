@@ -6,11 +6,15 @@
 #include "widgetcontext.h"
 
 #include <QApplication>
+#include <QBitArray>
+#include <QClipboard>
 #include <QDir>
+#include <QFileDialog>
 #include <QJsonDocument>
 #include <QJsonObject>
 #include <QScreen>
 #include <QStringList>
+#include <QThread>
 #include <QUrl>
 
 JSBridge::JSBridge( Widget *widget )
@@ -124,18 +128,11 @@ void JSBridge::setGeometry( int left, int top, int width, int height ) {
 }
 
 void JSBridge::download( QString url ) {
-    using namespace std;
     if ( url.isEmpty() ) {
         return;
     }
-
-    DownloadManager manager;
-    manager.append( QUrl( url ) );
-
-    // TODO 开始下载任务
-
-    //    QObject::connect( &manager, &DownloadManager::finished, &app,
-    //                      &QCoreApplication::quit );
+    DownloadManager *manager = new DownloadManager();
+    manager->append( QUrl( url ) );
 }
 
 Widget *JSBridge::getCurrent() { return this->m_widget; }
@@ -309,6 +306,16 @@ QWidget *JSBridge::open( QString uniqueLabel, QString options ) {
 
 QString JSBridge::getAppVersion() { return getKapokVersion(); }
 
+QString JSBridge::readClipboardText() {
+    QClipboard *clipboard = QApplication::clipboard();
+    return clipboard->text();
+}
+
+void JSBridge::writeClipboardText( QString text ) {
+    QClipboard *clipboard = QApplication::clipboard();
+    clipboard->setText( text );
+}
+
 // url
 void JSBridge::setURL( QString url ) {
     QString    configFileName = config->getConfigFileName();
@@ -365,5 +372,45 @@ QString JSBridge::getWebsocketURL() {
 }
 
 void JSBridge::onWebsocketURLChanged() { qDebug( "Websocket URL Changed" ); }
+
+QString JSBridge::save( QVariant &options ) {
+    QString defaultDir = QDir::homePath().append( "/Downloads" );
+    QString title      = QStringLiteral( "另存为" );
+
+    QJsonObject                 jsonObject = options.toJsonObject();
+    QJsonObject::const_iterator it         = jsonObject.constBegin();
+    QJsonObject::const_iterator end        = jsonObject.constEnd();
+    while ( it != end ) {
+        QString key = it.key();
+        if ( key == "defaultPath" ) {
+            defaultDir = it.value().toString();
+        } else if ( key == "title" ) {
+            title = it.value().toString();
+        }
+        it++;
+    }
+    return QFileDialog::getSaveFileName( m_widget, title, defaultDir );
+}
+
+QString JSBridge::downloadDir() {
+    return QDir::homePath().append( "/Downloads" );
+}
+
+void JSBridge::writeBinaryFile( QString path, QVariant &v ) {
+    QJsonObject                 jsonObject = v.toJsonObject();
+    QJsonObject::const_iterator it         = jsonObject.constBegin();
+    QJsonObject::const_iterator end        = jsonObject.constEnd();
+
+    QByteArray byteArray;
+    while ( it != end ) {
+        byteArray.append( it.value().toInt() );
+        it++;
+    }
+
+    QFile file( path );
+    file.open( QIODevice::WriteOnly );
+    file.write( byteArray );
+    file.close();
+}
 
 JSBridge::~JSBridge() { delete m_widget; }

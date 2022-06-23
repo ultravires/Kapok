@@ -24,6 +24,7 @@ Config::Config( QString configFileName ) {
         QString configFileName = QDir( file.fileName() ).canonicalPath();
         qDebug( "using config file %s", qPrintable( configFileName ) );
     }
+    file.close();
 }
 
 QString Config::getConfigFileName() { return m_configFileName; }
