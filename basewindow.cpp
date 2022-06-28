@@ -1,5 +1,7 @@
 #include "basewindow.h"
 #include <QApplication>
+#include <QPainter>
+#include <QPainterPath>
 #include <QScreen>
 
 #define STRETCH_RECT_HEIGHT 4 // 拉伸小矩形的高度;
@@ -35,6 +37,19 @@ bool BaseWindow::isResizable() { return this->m_resizable; }
 
 void BaseWindow::setResizable( bool resizable ) {
     this->m_resizable = resizable;
+}
+
+void BaseWindow::paintEvent( QPaintEvent *event ) {
+    QPainter painter( this );
+    painter.setRenderHint( QPainter::Antialiasing );
+    painter.setBrush( QBrush( Qt::transparent ) );
+    painter.setPen( Qt::transparent );
+    QRect rect = this->rect();
+    rect.setWidth( rect.width() - 1 );
+    rect.setHeight( rect.height() - 1 );
+    painter.drawRoundedRect( rect, 15, 15 );
+    event->accept();
+    QWidget::paintEvent( event );
 }
 
 void BaseWindow::resizeEvent( QResizeEvent *event ) {

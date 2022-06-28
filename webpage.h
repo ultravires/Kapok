@@ -1,6 +1,7 @@
 #ifndef WEBPAGE_H
 #define WEBPAGE_H
 
+#include <QNetworkReply>
 #include <QWebEnginePage>
 
 class WebPage : public QWebEnginePage {
@@ -15,8 +16,8 @@ class WebPage : public QWebEnginePage {
                                            QWebEnginePage::Feature feature );
     bool handleCertificateError( const QWebEngineCertificateError &error );
 
-#if QT_VERSION < QT_VERSION_CHECK( 6, 0, 0 )
   public:
+#if QT_VERSION < QT_VERSION_CHECK( 6, 0, 0 )
     bool certificateError( const QWebEngineCertificateError &error ) override;
 #endif
 };

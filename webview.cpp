@@ -2,6 +2,8 @@
 
 #include <QFile>
 #include <QMenu>
+#include <QPainter>
+#include <QPainterPath>
 #include <QTimer>
 #include <QWebEngineProfile>
 #include <QWebEngineScript>
@@ -9,7 +11,10 @@
 
 WebView::WebView( QWidget *parent )
     : QWebEngineView( parent ) {
+    setWindowFlag( Qt::FramelessWindowHint );
+    setAttribute( Qt::WA_TranslucentBackground );
     setAttribute( Qt::WA_QuitOnClose );
+    setStyleSheet( "background-color: transparent;" );
 
     connect( this, SIGNAL( loadFinished( bool ) ), this,
              SLOT( on_loadFinished( bool ) ) );
@@ -85,6 +90,19 @@ void WebView::on_loadFinished( bool finished ) {
         coreScriptFile.close();
         this->page()->runJavaScript( coreScript );
     }
+}
+
+void WebView::paintEvent( QPaintEvent *event ) {
+    QPainter painter( this );
+    painter.setRenderHint( QPainter::Antialiasing );
+    painter.setBrush( QBrush( Qt::transparent ) );
+    painter.setPen( Qt::transparent );
+    QRect rect = this->rect();
+    rect.setWidth( rect.width() - 1 );
+    rect.setHeight( rect.height() - 1 );
+    painter.drawRoundedRect( rect, 15, 15 );
+    event->accept();
+    QWidget::paintEvent( event );
 }
 
 WebView::~WebView() {}

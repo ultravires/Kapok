@@ -3,7 +3,10 @@
 
 #include <QContextMenuEvent>
 #include <QEvent>
+#include <QPaintEvent>
 #include <QWebEngineView>
+
+class QPaintEvent;
 
 class WebView : public QWebEngineView {
     Q_OBJECT
@@ -14,6 +17,7 @@ class WebView : public QWebEngineView {
   protected:
     QWebEngineView *createWindow( QWebEnginePage::WebWindowType type ) override;
     void            contextMenuEvent( QContextMenuEvent            *) override;
+    void            paintEvent( QPaintEvent *event ) override;
 
   private slots:
     void onCustomContextMenuRequested( QPoint );
