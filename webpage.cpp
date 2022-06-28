@@ -2,6 +2,8 @@
 
 #include <QDir>
 #include <QMessageBox>
+#include <QNetworkAccessManager>
+#include <QSslConfiguration>
 #include <QWebEngineCertificateError>
 #include <QWebEngineScript>
 #include <QWebEngineScriptCollection>
@@ -11,9 +13,13 @@ WebPage::WebPage( QObject *parent )
 
 WebPage::WebPage( QWebEngineProfile *profile, QObject *parent )
     : QWebEnginePage( profile, parent ) {
+    setBackgroundColor( Qt::transparent );
+    // https://doc.qt.io/qt-6/qwebenginepage.html#featurePermissionRequested
     connect( this, SIGNAL( featurePermissionRequested() ),
              SLOT( handleFeaturePermissionRequested() ) );
 #if QT_VERSION >= QT_VERSION_CHECK( 6, 0, 0 )
+
+    // https://doc.qt.io/qt-6/qwebenginepage.html#certificateError
     connect(
         this, SIGNAL( certificateError( const QWebEngineCertificateError ) ),
         SLOT( handleCertificateError( const QWebEngineCertificateError ) ) );
@@ -25,7 +31,6 @@ void WebPage::handleFeaturePermissionRequested(
     setFeaturePermission( securityOrigin, feature, PermissionGrantedByUser );
 }
 
-// https://doc.qt.io/qt-6/qwebenginepage.html#certificateError
 bool WebPage::handleCertificateError(
     const QWebEngineCertificateError &error ) {
 #if QT_VERSION < QT_VERSION_CHECK( 6, 0, 0 )

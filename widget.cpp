@@ -35,4 +35,9 @@ void Widget::closeEvent( QCloseEvent *event ) {
     event->accept();
 }
 
-Widget::~Widget() { delete webview; }
+Widget::~Widget() {
+    emit webview->page()->webChannel()->destroyed();
+    emit webview->page()->destroyed();
+    emit webview->destroyed();
+    delete webview;
+}
