@@ -375,7 +375,7 @@ void JSBridge::onWebsocketURLChanged() { qDebug( "Websocket URL Changed" ); }
 
 QString JSBridge::save( QVariant &options ) {
     QString defaultDir = QDir::homePath().append( "/Downloads" );
-    QString title      = QStringLiteral( "另存为" );
+    QString title      = QString::fromLocal8Bit( "Save as" );
 
     QJsonObject                 jsonObject = options.toJsonObject();
     QJsonObject::const_iterator it         = jsonObject.constBegin();
