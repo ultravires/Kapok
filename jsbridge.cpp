@@ -1,4 +1,4 @@
-#include "jsbridge.h"
+﻿#include "jsbridge.h"
 #include "downloadmanager.h"
 #include "global.h"
 #include "messagebox.h"
@@ -375,7 +375,7 @@ void JSBridge::onWebsocketURLChanged() { qDebug( "Websocket URL Changed" ); }
 
 QString JSBridge::save( QVariant &options ) {
     QString defaultDir = QDir::homePath().append( "/Downloads" );
-    QString title      = QString::fromLocal8Bit( "Save as" );
+    QString title      = QStringLiteral("另存为");
 
     QJsonObject                 jsonObject = options.toJsonObject();
     QJsonObject::const_iterator it         = jsonObject.constBegin();
@@ -389,6 +389,29 @@ QString JSBridge::save( QVariant &options ) {
         }
         it++;
     }
+    return QFileDialog::getSaveFileName( m_widget, title, defaultDir );
+}
+
+QString JSBridge::save( QString options ) {
+    QString defaultDir = QDir::homePath().append( "/Downloads" );
+    QString title      = QStringLiteral("另存为");
+
+    QJsonDocument jsonDocument = QJsonDocument::fromJson(options.toLocal8Bit().data());
+    if ( !jsonDocument.isNull() ) {
+        QJsonObject jsonObject = jsonDocument.object();
+        QJsonObject::const_iterator it         = jsonObject.constBegin();
+        QJsonObject::const_iterator end        = jsonObject.constEnd();
+        while ( it != end ) {
+            QString key = it.key();
+            if ( key == "defaultPath" ) {
+                defaultDir = it.value().toString();
+            } else if ( key == "title" ) {
+                title = it.value().toString();
+            }
+            it++;
+        }
+    }
+
     return QFileDialog::getSaveFileName( m_widget, title, defaultDir );
 }
 

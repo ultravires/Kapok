@@ -1,4 +1,4 @@
-#ifndef MESSAGEBOX_H
+﻿#ifndef MESSAGEBOX_H
 #define MESSAGEBOX_H
 
 #include "basewindow.h"
