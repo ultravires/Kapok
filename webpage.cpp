@@ -13,7 +13,6 @@ WebPage::WebPage( QObject *parent )
 
 WebPage::WebPage( QWebEngineProfile *profile, QObject *parent )
     : QWebEnginePage( profile, parent ) {
-    setBackgroundColor( Qt::transparent );
     // https://doc.qt.io/qt-6/qwebenginepage.html#featurePermissionRequested
     connect( this, SIGNAL( featurePermissionRequested() ),
              SLOT( handleFeaturePermissionRequested() ) );

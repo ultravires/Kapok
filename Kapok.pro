@@ -1,4 +1,4 @@
-QT       += core gui network widgets webenginecore webenginewidgets webchannel quick
+QT       += core gui network widgets webenginecore webenginewidgets webchannel quick sql
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -58,6 +58,7 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 include(./QtWebApp/httpserver/httpserver.pri)
 include(./QtWebApp/logging/logging.pri)
 include(./QtWebApp/downloadmanager/downloadmanager.pri)
+include(./QtWebApp/database/database.pri)
 #include(./Clipboard/clipboard.pri)
 
 RESOURCES += \

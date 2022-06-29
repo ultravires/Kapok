@@ -18,6 +18,7 @@ Widget::Widget( QWidget *parent )
 
     WebPage *webPage = new WebPage();
     this->webview->setPage( webPage );
+    //    this->webview->page()->setBackgroundColor( Qt::transparent );
     this->webview->page()->setWebChannel( webChannel );
 
     QGridLayout *mainLayout = new QGridLayout( this );
@@ -28,7 +29,6 @@ Widget::Widget( QWidget *parent )
 void Widget::closeEvent( QCloseEvent *event ) {
     WidgetContext::removeWidget( property( "__label__" ).toString() );
     this->webview->close();
-    event->accept();
 }
 
 Widget::~Widget() {

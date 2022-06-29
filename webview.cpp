@@ -11,28 +11,21 @@
 
 WebView::WebView( QWidget *parent )
     : QWebEngineView( parent ) {
-    setWindowFlag( Qt::FramelessWindowHint );
-    setAttribute( Qt::WA_TranslucentBackground );
-    setAttribute( Qt::WA_QuitOnClose );
-    setStyleSheet( "background-color: transparent;" );
-
     connect( this, SIGNAL( loadFinished( bool ) ), this,
              SLOT( on_loadFinished( bool ) ) );
 
-    // https://doc.qt.io/qt-5/qt.html#ContextMenuPolicy-enum
+    // https://doc.qt.io/qt-6/qt.html#ContextMenuPolicy-enum
     this->setContextMenuPolicy( Qt::NoContextMenu );
     //    this->setContextMenuPolicy( Qt::CustomContextMenu );
     //    connect( this, SIGNAL( customContextMenuRequested( QPoint ) ), this,
     //             SLOT( onCustomContextMenuRequested( QPoint ) ) );
 
     // https://doc.qt.io/qt-6/qwebengineprofile.html
-    // https://doc.qt.io/qt-5/qwebengineprofile.html
     this->page()->profile()->setHttpUserAgent( "QT netiler" );
     this->page()->profile()->setHttpCacheType(
         QWebEngineProfile::MemoryHttpCache );
 
     // https://doc.qt.io/qt-6/qwebenginesettings.html#WebAttribute-enum
-    // https://doc.qt.io/qt-5/qwebenginesettings.html#WebAttribute-enum
     this->page()->settings()->setAttribute(
         QWebEngineSettings::LocalStorageEnabled, true );
     this->page()->settings()->setAttribute(
@@ -101,7 +94,6 @@ void WebView::paintEvent( QPaintEvent *event ) {
     rect.setWidth( rect.width() - 1 );
     rect.setHeight( rect.height() - 1 );
     painter.drawRoundedRect( rect, 15, 15 );
-    event->accept();
     QWidget::paintEvent( event );
 }
 

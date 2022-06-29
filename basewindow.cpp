@@ -12,6 +12,8 @@ BaseWindow::BaseWindow( QWidget *parent )
     setWindowFlag( Qt::Widget );
     setWindowFlag( Qt::FramelessWindowHint );
     setAttribute( Qt::WA_TranslucentBackground );
+    //    setAttribute( Qt::WA_OpaquePaintEvent );
+    //    setAttribute( Qt::WA_NoSystemBackground );
     setAttribute( Qt::WA_DeleteOnClose );
 }
 
@@ -48,16 +50,11 @@ void BaseWindow::paintEvent( QPaintEvent *event ) {
     rect.setWidth( rect.width() - 1 );
     rect.setHeight( rect.height() - 1 );
     painter.drawRoundedRect( rect, 15, 15 );
-    event->accept();
     QWidget::paintEvent( event );
 }
 
 void BaseWindow::resizeEvent( QResizeEvent *event ) {
-    if ( this->isResizable() ) {
-        event->accept();
-    } else {
-        event->ignore();
-    }
+    // TODO
 }
 
 void BaseWindow::closeEvent( QCloseEvent *event ) { event->accept(); }
