@@ -17,7 +17,6 @@ class WebView : public QWebEngineView {
   protected:
     QWebEngineView *createWindow( QWebEnginePage::WebWindowType type ) override;
     void            contextMenuEvent( QContextMenuEvent            *) override;
-    void            paintEvent( QPaintEvent *event ) override;
 
   private slots:
     void onCustomContextMenuRequested( QPoint );

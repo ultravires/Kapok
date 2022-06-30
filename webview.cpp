@@ -85,16 +85,4 @@ void WebView::on_loadFinished( bool finished ) {
     }
 }
 
-void WebView::paintEvent( QPaintEvent *event ) {
-    QPainter painter( this );
-    painter.setRenderHint( QPainter::Antialiasing );
-    painter.setBrush( QBrush( Qt::transparent ) );
-    painter.setPen( Qt::transparent );
-    QRect rect = this->rect();
-    rect.setWidth( rect.width() - 1 );
-    rect.setHeight( rect.height() - 1 );
-    painter.drawRoundedRect( rect, 15, 15 );
-    QWidget::paintEvent( event );
-}
-
 WebView::~WebView() {}

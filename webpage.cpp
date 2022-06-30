@@ -14,8 +14,10 @@ WebPage::WebPage( QObject *parent )
 WebPage::WebPage( QWebEngineProfile *profile, QObject *parent )
     : QWebEnginePage( profile, parent ) {
     // https://doc.qt.io/qt-6/qwebenginepage.html#featurePermissionRequested
-    connect( this, SIGNAL( featurePermissionRequested() ),
-             SLOT( handleFeaturePermissionRequested() ) );
+    //    connect( this, SIGNAL( featurePermissionRequested() ),
+    //             SLOT( handleFeaturePermissionRequested() ) );
+    connect( this, &QWebEnginePage::featurePermissionRequested, this,
+             &WebPage::handleFeaturePermissionRequested );
 #if QT_VERSION >= QT_VERSION_CHECK( 6, 0, 0 )
 
     // https://doc.qt.io/qt-6/qwebenginepage.html#certificateError
@@ -27,6 +29,7 @@ WebPage::WebPage( QWebEngineProfile *profile, QObject *parent )
 
 void WebPage::handleFeaturePermissionRequested(
     const QUrl &securityOrigin, QWebEnginePage::Feature feature ) {
+    qDebug( "设备权限申请" );
     setFeaturePermission( securityOrigin, feature, PermissionGrantedByUser );
 }
 

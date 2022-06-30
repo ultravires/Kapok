@@ -1,4 +1,5 @@
 #include "downloadmanager.h"
+#include "directory.h"
 
 #include <QFileInfo>
 #include <QNetworkReply>
@@ -31,22 +32,24 @@ void DownloadManager::append( const QUrl &url ) {
 }
 
 QString DownloadManager::saveFileName( const QUrl &url ) {
-    QString path     = url.path();
-    QString basename = QFileInfo( path ).fileName();
-    qDebug( "%s", qPrintable( basename ) );
+    Directory *directory   = new Directory();
+    QString    downloadDir = directory->downloadDir().at( 0 );
+    QString    path        = url.path();
+    QString    basename    = downloadDir + "/" + QFileInfo( path ).fileName();
+    printf( "Save to: %s", qPrintable( basename ) );
 
     if ( basename.isEmpty() ) basename = "download";
 
     if ( QFile::exists( basename ) ) {
         // already exists, don't overwrite
-        int i = 0;
-        basename += '.';
+        int i = 1;
+        basename += "(";
         while ( QFile::exists( basename + QString::number( i ) ) )
             ++i;
 
         basename += QString::number( i );
+        basename += ")";
     }
-
     return basename;
 }
 
@@ -58,10 +61,19 @@ void DownloadManager::startNextDownload() {
         return;
     }
 
-    QUrl url = downloadQueue.dequeue();
+    QUrl            url = downloadQueue.dequeue();
+    QNetworkRequest request( url );
+    currentDownload     = manager.get( request );
+    QString disposition = currentDownload->rawHeader( "Content-Disposition" );
+    QString filename = disposition.mid( QStringLiteral( "filename=" ).size() );
 
-    QString filename = saveFileName( url );
+    if ( filename.isEmpty() ) {
+        filename = saveFileName( url );
+    }
     output.setFileName( filename );
+
+    printf( "filename: %s\n", qPrintable( filename ) );
+
     if ( !output.open( QIODevice::WriteOnly ) ) {
         fprintf( stderr,
                  "Problem opening save file '%s' for download '%s': %s\n",
@@ -72,8 +84,6 @@ void DownloadManager::startNextDownload() {
         return; // skip this download
     }
 
-    QNetworkRequest request( url );
-    currentDownload = manager.get( request );
     connect( currentDownload, &QNetworkReply::downloadProgress, this,
              &DownloadManager::downloadProgress );
     connect( currentDownload, &QNetworkReply::finished, this,

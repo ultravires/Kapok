@@ -25,7 +25,7 @@ class BaseWindow : public QWidget {
   protected:
     void closeEvent( QCloseEvent *event ) override;
     void resizeEvent( QResizeEvent *event ) override;
-    void paintEvent( QPaintEvent *event ) override;
+    //    void paintEvent( QPaintEvent *event ) override;
 
   private:
     /**

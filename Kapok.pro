@@ -59,6 +59,7 @@ include(./QtWebApp/httpserver/httpserver.pri)
 include(./QtWebApp/logging/logging.pri)
 include(./QtWebApp/downloadmanager/downloadmanager.pri)
 include(./QtWebApp/database/database.pri)
+include(./QtWebApp/directory/directory.pri)
 #include(./Clipboard/clipboard.pri)
 
 RESOURCES += \

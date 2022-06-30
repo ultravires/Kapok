@@ -1,4 +1,5 @@
 #include "jsbridge.h"
+#include "directory.h"
 #include "downloadmanager.h"
 #include "global.h"
 #include "messagebox.h"
@@ -393,7 +394,8 @@ QString JSBridge::save( QVariant &options ) {
 }
 
 QString JSBridge::downloadDir() {
-    return QDir::homePath().append( "/Downloads" );
+    Directory *directory = new Directory();
+    return directory->downloadDir().at( 0 );
 }
 
 void JSBridge::writeBinaryFile( QString path, QVariant &v ) {
