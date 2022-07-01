@@ -1,4 +1,4 @@
-#ifndef JSBRIDGE_H
+﻿#ifndef JSBRIDGE_H
 #define JSBRIDGE_H
 
 #include "global.h"
@@ -215,6 +215,12 @@ class JSBridge : public QObject {
      * @return 路径
      */
     QString save( QVariant &options );
+
+    /**
+     * @brief save 打开文件/文件夹保存对话框
+     * @return 路径
+     */
+    QString save( QString options );
 
     /**
      * @brief downloadDir 返回用户下载目录的路径
