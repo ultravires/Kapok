@@ -1,4 +1,5 @@
 #include "jsbridge.h"
+#include "database.h"
 #include "directory.h"
 #include "downloadmanager.h"
 #include "global.h"
@@ -128,11 +129,13 @@ void JSBridge::setGeometry( int left, int top, int width, int height ) {
 }
 
 void JSBridge::download( QString url ) {
-    if ( url.isEmpty() ) {
-        return;
-    }
     DownloadManager *manager = new DownloadManager();
     manager->append( QUrl( url ) );
+}
+
+void JSBridge::download( QStringList urls ) {
+    DownloadManager *manager = new DownloadManager();
+    manager->append( urls );
 }
 
 Widget *JSBridge::getCurrent() { return this->m_widget; }
@@ -421,21 +424,16 @@ QString JSBridge::downloadDir() {
     return directory->downloadDir().at( 0 );
 }
 
-void JSBridge::writeBinaryFile( QString path, QVariant &v ) {
-    QJsonObject                 jsonObject = v.toJsonObject();
-    QJsonObject::const_iterator it         = jsonObject.constBegin();
-    QJsonObject::const_iterator end        = jsonObject.constEnd();
+bool JSBridge::exec( const QString &connectionName,
+                     const QString &queryString ) {
+    Database *database = new Database( connectionName );
+    return database->exec( queryString );
+}
 
-    QByteArray byteArray;
-    while ( it != end ) {
-        byteArray.append( it.value().toInt() );
-        it++;
-    }
-
-    QFile file( path );
-    file.open( QIODevice::WriteOnly );
-    file.write( byteArray );
-    file.close();
+bool JSBridge::existTable( const QString &connectionName,
+                           const QString &tableName ) {
+    Database *database = new Database( connectionName );
+    return database->existTable( tableName );
 }
 
 JSBridge::~JSBridge() { delete m_widget; }

@@ -17,15 +17,18 @@ class DownloadManager : public QObject {
 
     void           append( const QUrl &url );
     void           append( const QStringList &urls );
-    static QString saveFileName( const QUrl &url );
+    static QString saveFileName( const QUrl &url, bool askForSavePath = false );
+    bool           askForSavePath = false;
 
   signals:
     void finished();
+    void progress( qint64 bytesReceived, qint64 bytesTota );
 
   private slots:
     void startNextDownload();
     void downloadProgress( qint64 bytesReceived, qint64 bytesTotal );
     void downloadFinished();
+    void metaDataChanged();
     void downloadReadyRead();
 
   private:

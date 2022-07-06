@@ -1,7 +1,11 @@
 #include "downloadmanager.h"
+#include "database.h"
 #include "directory.h"
 
+#include <QApplication>
+#include <QFileDialog>
 #include <QFileInfo>
+#include <QJsonObject>
 #include <QNetworkReply>
 #include <QTextStream>
 #include <QTimer>
@@ -31,14 +35,23 @@ void DownloadManager::append( const QUrl &url ) {
     ++totalCount;
 }
 
-QString DownloadManager::saveFileName( const QUrl &url ) {
+QString DownloadManager::saveFileName( const QUrl &url, bool askForSavePath ) {
     Directory *directory   = new Directory();
     QString    downloadDir = directory->downloadDir().at( 0 );
     QString    path        = url.path();
     QString    basename    = downloadDir + "/" + QFileInfo( path ).fileName();
-    printf( "Save to: %s", qPrintable( basename ) );
 
-    if ( basename.isEmpty() ) basename = "download";
+    if ( askForSavePath ) {
+        basename = QFileDialog::getSaveFileName( QApplication::activeWindow(),
+                                                 QStringLiteral( "另存为" ),
+                                                 basename );
+    } else {
+        if ( basename.isEmpty() ) basename = "download";
+    }
+
+    if ( basename.isEmpty() ) {
+        return "";
+    }
 
     if ( QFile::exists( basename ) ) {
         // already exists, don't overwrite
@@ -61,29 +74,12 @@ void DownloadManager::startNextDownload() {
         return;
     }
 
-    QUrl            url = downloadQueue.dequeue();
+    QUrl url = downloadQueue.dequeue();
+
     QNetworkRequest request( url );
-    currentDownload     = manager.get( request );
-    QString disposition = currentDownload->rawHeader( "Content-Disposition" );
-    QString filename = disposition.mid( QStringLiteral( "filename=" ).size() );
-
-    if ( filename.isEmpty() ) {
-        filename = saveFileName( url );
-    }
-    output.setFileName( filename );
-
-    printf( "filename: %s\n", qPrintable( filename ) );
-
-    if ( !output.open( QIODevice::WriteOnly ) ) {
-        fprintf( stderr,
-                 "Problem opening save file '%s' for download '%s': %s\n",
-                 qPrintable( filename ), url.toEncoded().constData(),
-                 qPrintable( output.errorString() ) );
-
-        startNextDownload();
-        return; // skip this download
-    }
-
+    currentDownload = manager.get( request );
+    connect( currentDownload, &QNetworkReply::metaDataChanged, this,
+             &DownloadManager::metaDataChanged );
     connect( currentDownload, &QNetworkReply::downloadProgress, this,
              &DownloadManager::downloadProgress );
     connect( currentDownload, &QNetworkReply::finished, this,
@@ -96,8 +92,63 @@ void DownloadManager::startNextDownload() {
     downloadTimer.start();
 }
 
+void DownloadManager::metaDataChanged() {
+    QUrl     url = currentDownload->url();
+    QString  filename;
+    QVariant variant =
+        currentDownload->header( QNetworkRequest::ContentDispositionHeader );
+    if ( variant.isValid() ) {
+        qDebug( "variant: %s", qPrintable( QByteArray::fromPercentEncoding(
+                                               variant.toByteArray() )
+                                               .constData() ) );
+        QString contentDisposition =
+            QByteArray::fromPercentEncoding( variant.toByteArray() )
+                .constData();
+        QRegularExpression      regExp( "(.*)filename=\"(?<filename>.*)\"" );
+        QRegularExpressionMatch match = regExp.match( contentDisposition );
+        if ( match.hasMatch() ) {
+            filename = match.captured( "filename" );
+        }
+
+        if ( filename.isEmpty() ) {
+            filename = "download";
+        }
+
+        Directory *directory   = new Directory();
+        QString    downloadDir = directory->downloadDir().at( 0 );
+        QString    path        = downloadDir + "/" + filename;
+
+        if ( QFile::exists( path ) ) {
+            // already exists, don't overwrite
+            int i = 1;
+            path += "(";
+            while ( QFile::exists( path + QString::number( i ) ) )
+                ++i;
+
+            path += QString::number( i );
+            path += ")";
+        }
+
+        qDebug( "file path = %s", qPrintable( path ) );
+
+        output.setFileName( path );
+        if ( !output.open( QIODevice::WriteOnly ) ) {
+            fprintf( stderr,
+                     "Problem opening save file '%s' for download '%s': %s\n",
+                     qPrintable( path ), url.toEncoded().constData(),
+                     qPrintable( output.errorString() ) );
+            currentDownload->abort();
+            startNextDownload();
+            return; // skip this download
+        }
+    }
+}
+
 void DownloadManager::downloadProgress( qint64 bytesReceived,
                                         qint64 bytesTotal ) {
+
+    emit progress( bytesReceived, bytesReceived );
+
     progressBar.setStatus( bytesReceived, bytesTotal );
 
     // calculate the download speed

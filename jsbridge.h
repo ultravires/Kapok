@@ -29,6 +29,7 @@ class JSBridge : public QObject {
     void URLChanged();
     void serverChanged();
     void websocketURLChanged();
+    void receivedMessage( QString functionName, QString parameters );
 
   public slots:
     /**
@@ -160,8 +161,15 @@ class JSBridge : public QObject {
     /**
      * @brief download 文件下载
      * @param url 文件地址
+     * @param path 文件下载路径
      */
     void download( QString url );
+
+    /**
+     * @brief download 文件下载
+     * @param urls 地址列表
+     */
+    void download( QStringList urls );
 
     /**
      * @brief getCurrent 获取当前窗口
@@ -228,7 +236,19 @@ class JSBridge : public QObject {
      */
     QString downloadDir();
 
-    void writeBinaryFile( QString path, QVariant &v );
+    /**
+     * @brief exec 执行 SQLite 查询语句
+     * @param queryString 查询语句
+     * @return 是否执行成功
+     */
+    bool exec( const QString &connectionName, const QString &queryString );
+
+    /**
+     * @brief existTable SQLite 中是否存在指定表
+     * @param tableName 表名
+     * @return 是否存在
+     */
+    bool existTable( const QString &connectionName, const QString &tableName );
 };
 
 #endif // JSBRIDGE_H

@@ -11,6 +11,7 @@ class Database : public QObject {
     Database( QString name, QObject *parent = nullptr );
     ~Database();
     bool exec( const QString &queryString );
+    bool existTable( const QString &tableName );
 
   private:
     QSqlDatabase m_database;
