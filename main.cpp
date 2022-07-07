@@ -20,11 +20,6 @@ int main( int argc, char *argv[] ) {
 
     qputenv( "QTWEBENGINE_CHROMIUM_FLAGS", "--no-sandbox" );
 
-    // QApplication::setAttribute( Qt::AA_UseSoftwareOpenGL );
-    // QApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
-    // QApplication::setAttribute(Qt::AA_UseHighDpiPixmaps);
-    // QQuickWindow::setSceneGraphBackend( QSGRendererInterface::Software );
-
     QApplication app( argc, argv );
     app.setWindowIcon( QIcon( ":icon/logo@128x128.ico" ) );
     app.setApplicationName( "Kapok" );
