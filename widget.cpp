@@ -27,7 +27,9 @@ Widget::Widget( QWidget *parent )
 }
 
 void Widget::closeEvent( QCloseEvent *event ) {
-    WidgetContext::removeWidget( property( "__label__" ).toString() );
+    QString label = property( "__label__" ).toString();
+    qDebug( "Widget %s closed.", qPrintable( label ) );
+    WidgetContext::removeWidget( label );
     this->webview->close();
 }
 

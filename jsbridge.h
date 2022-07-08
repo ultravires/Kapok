@@ -115,9 +115,9 @@ class JSBridge : public QObject {
     void close();
 
     /**
-     * @brief quit 退出程序
+     * @brief exit 退出程序
      */
-    void quit();
+    void exit();
 
     /**
      * @brief open 打开新的窗口
@@ -249,6 +249,8 @@ class JSBridge : public QObject {
      * @return 是否存在
      */
     bool existTable( const QString &connectionName, const QString &tableName );
+
+    void closeAllWidget();
 };
 
 #endif // JSBRIDGE_H

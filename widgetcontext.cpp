@@ -11,8 +11,9 @@ void WidgetContext::addWidget( QString label, Widget *widget ) {
 }
 
 void WidgetContext::removeWidget( QString label ) {
-    QMap<QString, Widget *>::iterator it = map.find( label );
-    if ( it != map.end() ) {
+    QMap<QString, Widget *>::const_iterator it  = map.constFind( label );
+    QMap<QString, Widget *>::const_iterator end = map.constEnd();
+    if ( it != end ) {
         map.erase( it );
     }
 }
@@ -26,5 +27,18 @@ Widget *WidgetContext::getWidget( QString label ) {
 }
 
 void WidgetContext::clear() { map.clear(); }
+
+void WidgetContext::closeAllWidget() {
+    QMap<QString, Widget *>::const_iterator it  = map.constBegin();
+    QMap<QString, Widget *>::const_iterator end = map.constEnd();
+    while ( it != end ) {
+        Widget *widget = it.value();
+        if ( widget ) {
+            widget->close();
+        }
+        it++;
+    }
+    clear();
+}
 
 WidgetContext::~WidgetContext() {}

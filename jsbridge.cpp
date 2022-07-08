@@ -85,16 +85,9 @@ void JSBridge::center() {
 
 void JSBridge::move( int left, int top ) { m_widget->move( left, top ); }
 
-void JSBridge::close() {
-    QString label = m_widget->property( "__label__" ).toString();
-    qDebug( "__label__ %s closed", qPrintable( label ) );
-    if ( !label.isEmpty() ) {
-        WidgetContext::removeWidget( label );
-    }
-    m_widget->close();
-}
+void JSBridge::close() { m_widget->close(); }
 
-void JSBridge::quit() {
+void JSBridge::exit() {
     qApp->setQuitOnLastWindowClosed( true );
     qApp->closeAllWindows();
     qApp->exit();
@@ -435,5 +428,7 @@ bool JSBridge::existTable( const QString &connectionName,
     Database *database = new Database( connectionName );
     return database->existTable( tableName );
 }
+
+void JSBridge::closeAllWidget() { WidgetContext::closeAllWidget(); }
 
 JSBridge::~JSBridge() { delete m_widget; }

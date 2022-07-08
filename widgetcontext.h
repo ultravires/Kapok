@@ -9,6 +9,7 @@ class WidgetContext {
     static void    removeWidget( QString label );
     static Widget *getWidget( QString label );
     static void    clear();
+    static void    closeAllWidget();
 
   private:
     WidgetContext();
