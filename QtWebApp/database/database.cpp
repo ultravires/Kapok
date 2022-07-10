@@ -1,7 +1,8 @@
-#include "database.h"
+﻿#include "database.h"
 
 #include <QCoreApplication>
 #include <QSqlQuery>
+#include <QVariant>
 
 Database::Database( QString connectionName, QObject *parent )
     : QObject( parent ) {

@@ -1,4 +1,4 @@
-#include "widgetcontext.h"
+﻿#include "widgetcontext.h"
 
 #include <QMap>
 
@@ -11,8 +11,8 @@ void WidgetContext::addWidget( QString label, Widget *widget ) {
 }
 
 void WidgetContext::removeWidget( QString label ) {
-    QMap<QString, Widget *>::const_iterator it  = map.constFind( label );
-    QMap<QString, Widget *>::const_iterator end = map.constEnd();
+    QMap<QString, Widget *>::iterator it  = map.find( label );
+    QMap<QString, Widget *>::iterator end = map.end();
     if ( it != end ) {
         map.erase( it );
     }

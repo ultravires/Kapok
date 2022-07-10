@@ -1,4 +1,4 @@
-#include "jsbridge.h"
+﻿#include "jsbridge.h"
 #include "database.h"
 #include "directory.h"
 #include "downloadmanager.h"

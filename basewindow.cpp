@@ -1,4 +1,4 @@
-#include "basewindow.h"
+﻿#include "basewindow.h"
 #include <QApplication>
 #include <QPainter>
 #include <QPainterPath>
@@ -10,7 +10,7 @@
 BaseWindow::BaseWindow( QWidget *parent )
     : QWidget( parent ) {
     setWindowFlag( Qt::Widget );
-    setWindowFlag( Qt::FramelessWindowHint );
+    //setWindowFlag( Qt::FramelessWindowHint );
     setAttribute( Qt::WA_TranslucentBackground );
     setAttribute( Qt::WA_DeleteOnClose );
 }

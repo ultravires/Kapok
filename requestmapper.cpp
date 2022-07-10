@@ -1,4 +1,4 @@
-#include "requestmapper.h"
+﻿#include "requestmapper.h"
 #include "global.h"
 
 #include <QJsonArray>
@@ -32,6 +32,7 @@ void RequestMapper::service( HttpRequest &request, HttpResponse &response ) {
             QByteArray    json = jsonDocument.toJson();
             response.write( json, true );
         }
+
     } else {
         staticFileController->service( request, response );
     }

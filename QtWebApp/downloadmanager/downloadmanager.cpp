@@ -1,4 +1,4 @@
-#include "downloadmanager.h"
+﻿#include "downloadmanager.h"
 #include "database.h"
 #include "directory.h"
 
