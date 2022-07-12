@@ -265,6 +265,7 @@ QWidget *JSBridge::open( QString uniqueLabel, QString options ) {
         }
         if ( transparent ) {
             widget->setAttribute( Qt::WA_TranslucentBackground, true );
+            widget->webview->page()->setBackgroundColor( Qt::transparent );
         } else {
             widget->setAttribute( Qt::WA_TranslucentBackground, false );
         }

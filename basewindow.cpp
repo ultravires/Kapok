@@ -1,5 +1,7 @@
 ﻿#include "basewindow.h"
 #include <QApplication>
+#include <QJsonDocument>
+#include <QJsonObject>
 #include <QPainter>
 #include <QPainterPath>
 #include <QScreen>
@@ -10,9 +12,18 @@
 BaseWindow::BaseWindow( QWidget *parent )
     : QWidget( parent ) {
     setWindowFlag( Qt::Widget );
-    //setWindowFlag( Qt::FramelessWindowHint );
-    setAttribute( Qt::WA_TranslucentBackground );
     setAttribute( Qt::WA_DeleteOnClose );
+
+    QJsonObject jsonObject;
+    jsonObject.insert( "decorations", false );
+    jsonObject.insert( "transparent", true );
+    if ( jsonObject.value( "decorations" ).toBool() == false ) {
+        setWindowFlag( Qt::FramelessWindowHint );
+        setWindowFlag( Qt::NoDropShadowWindowHint );
+    }
+    if ( jsonObject.value( "transparent" ).toBool() == true ) {
+        setAttribute( Qt::WA_TranslucentBackground );
+    }
 }
 
 void BaseWindow::center() {

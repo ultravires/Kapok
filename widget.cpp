@@ -18,7 +18,7 @@ Widget::Widget( QWidget *parent )
 
     WebPage *webPage = new WebPage();
     this->webview->setPage( webPage );
-    //    this->webview->page()->setBackgroundColor( Qt::transparent );
+    this->webview->page()->setBackgroundColor( Qt::transparent );
     this->webview->page()->setWebChannel( webChannel );
 
     QGridLayout *mainLayout = new QGridLayout( this );
