@@ -13,25 +13,14 @@ WebView::WebView( QWidget *parent )
     : QWebEngineView( parent ) {
     connect( this, SIGNAL( loadFinished( bool ) ), this,
              SLOT( on_loadFinished( bool ) ) );
-
-    // https://doc.qt.io/qt-6/qt.html#ContextMenuPolicy-enum
     this->setContextMenuPolicy( Qt::NoContextMenu );
-    //    this->setContextMenuPolicy( Qt::CustomContextMenu );
-    //    connect( this, SIGNAL( customContextMenuRequested( QPoint ) ), this,
-    //             SLOT( onCustomContextMenuRequested( QPoint ) ) );
-
-    // https://doc.qt.io/qt-6/qwebengineprofile.html
     this->page()->profile()->setHttpUserAgent( "QT netiler" );
     this->page()->profile()->setHttpCacheType(
         QWebEngineProfile::MemoryHttpCache );
-
-    // https://doc.qt.io/qt-6/qwebenginesettings.html#WebAttribute-enum
     this->page()->settings()->setAttribute(
         QWebEngineSettings::LocalStorageEnabled, true );
     this->page()->settings()->setAttribute(
         QWebEngineSettings::FullScreenSupportEnabled, true );
-    // see also:
-    // https://doc.qt.io/qt-6/qtwebengine-features.html#pepper-plugin-api
     this->page()->settings()->setAttribute( QWebEngineSettings::PluginsEnabled,
                                             true );
     this->page()->settings()->setAttribute(
