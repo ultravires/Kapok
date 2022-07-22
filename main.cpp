@@ -18,12 +18,15 @@ using namespace stefanfrings;
 
 int main( int argc, char *argv[] ) {
 
+#ifdef __sw_64__
     qputenv( "QTWEBENGINE_CHROMIUM_FLAGS", "--no-sandbox" );
+#endif
 
     QApplication app( argc, argv );
     app.setWindowIcon( QIcon( ":icon/logo@128x128.ico" ) );
     app.setApplicationName( "Kapok" );
     app.setOrganizationName( "Programming enthusiast" );
+    app.setApplicationDisplayName( "Kapok" );
 
     // i18n
     QTranslator       translator;

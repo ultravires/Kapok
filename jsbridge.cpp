@@ -8,6 +8,7 @@
 #include "widgetcontext.h"
 #include <QApplication>
 #include <QBitArray>
+#include <QBuffer>
 #include <QClipboard>
 #include <QDir>
 #include <QFileDialog>
@@ -145,7 +146,9 @@ QWidget *JSBridge::open( QString uniqueLabel, QString options ) {
     if ( w != nullptr ) {
         w->show();
         w->activateWindow();
-        return w;
+        w->setWindowState( ( w->windowState() & ~Qt::WindowMinimized ) |
+                           Qt::WindowActive );
+        return qobject_cast<Widget *>( w );
     }
     Widget *widget = new Widget();
     widget->setProperty( "__label__", uniqueLabel );
@@ -298,7 +301,7 @@ QWidget *JSBridge::open( QString uniqueLabel, QString options ) {
         widget->webview->load( QUrl( url ) );
         widget->show();
     }
-    return widget;
+    return qobject_cast<Widget *>( widget );
 }
 
 QString JSBridge::getAppVersion() { return getKapokVersion(); }
@@ -308,9 +311,25 @@ QString JSBridge::readClipboardText() {
     return clipboard->text();
 }
 
-void JSBridge::writeClipboardText( QString text ) {
+void JSBridge::writeClipboardText( const QString &text ) {
     QClipboard *clipboard = QApplication::clipboard();
     clipboard->setText( text );
+}
+
+QString JSBridge::readClipboardImage() {
+    QByteArray  byteArray;
+    QBuffer     buffer( &byteArray );
+    QClipboard *clipboard = QApplication::clipboard();
+    clipboard->image().save( &buffer, "PNG" );
+    QString imageBase64 = byteArray.toBase64();
+    return imageBase64;
+}
+
+void JSBridge::writeClipboardImage( const QString &imageBase64 ) {
+    QImage image;
+    image.loadFromData( QByteArray::fromBase64( imageBase64.toUtf8() ) );
+    QClipboard *clipboard = QApplication::clipboard();
+    clipboard->setImage( image );
 }
 
 // url

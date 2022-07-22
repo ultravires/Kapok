@@ -12,13 +12,13 @@
 
 Widget::Widget( QWidget *parent )
     : BaseWindow( parent ) {
-    JSBridge    *bridge     = new JSBridge( this );
-    QWebChannel *webChannel = new QWebChannel();
-    webChannel->registerObject( "bridge", bridge );
-
     WebPage *webPage = new WebPage();
     this->webview->setPage( webPage );
     this->webview->page()->setBackgroundColor( Qt::transparent );
+
+    QWebChannel *webChannel = new QWebChannel();
+    JSBridge    *bridge     = new JSBridge( this );
+    webChannel->registerObject( "bridge", bridge );
     this->webview->page()->setWebChannel( webChannel );
 
     QGridLayout *mainLayout = new QGridLayout( this );
@@ -30,12 +30,6 @@ void Widget::closeEvent( QCloseEvent *event ) {
     QString label = property( "__label__" ).toString();
     qDebug( "Widget %s closed.", qPrintable( label ) );
     WidgetContext::removeWidget( label );
-    this->webview->close();
 }
 
-Widget::~Widget() {
-    emit webview->page()->webChannel()->destroyed();
-    emit webview->page()->destroyed();
-    emit webview->destroyed();
-    delete webview;
-}
+Widget::~Widget() { delete webview; }

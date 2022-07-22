@@ -14,8 +14,6 @@ class QPaintEvent;
 class BaseWindow : public QWidget {
     Q_OBJECT
 
-    Q_PROPERTY( bool resizable READ isResizable WRITE setResizable CONSTANT );
-
   public:
     BaseWindow( QWidget *parent = nullptr );
     ~BaseWindow();

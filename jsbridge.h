@@ -198,7 +198,11 @@ class JSBridge : public QObject {
     /**
      * @brief writeClipboardText 向剪贴板写入文本
      */
-    void writeClipboardText( QString text );
+    void writeClipboardText( const QString &text );
+
+    QString readClipboardImage();
+
+    void writeClipboardImage( const QString &imageBase64 );
 
     QString getURL();
 

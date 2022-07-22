@@ -9,18 +9,21 @@
 #include <QWebEngineScriptCollection>
 
 WebPage::WebPage( QObject *parent )
-    : QWebEnginePage( parent ) {}
-
-WebPage::WebPage( QWebEngineProfile *profile, QObject *parent )
-    : QWebEnginePage( profile, parent ) {
-    // https://doc.qt.io/qt-6/qwebenginepage.html#featurePermissionRequested
-    //    connect( this, SIGNAL( featurePermissionRequested() ),
-    //             SLOT( handleFeaturePermissionRequested() ) );
+    : QWebEnginePage( parent ) {
     connect( this, &QWebEnginePage::featurePermissionRequested, this,
              &WebPage::handleFeaturePermissionRequested );
 #if QT_VERSION >= QT_VERSION_CHECK( 6, 0, 0 )
+    connect(
+        this, SIGNAL( certificateError( const QWebEngineCertificateError ) ),
+        SLOT( handleCertificateError( const QWebEngineCertificateError ) ) );
+#endif
+}
 
-    // https://doc.qt.io/qt-6/qwebenginepage.html#certificateError
+WebPage::WebPage( QWebEngineProfile *profile, QObject *parent )
+    : QWebEnginePage( profile, parent ) {
+    connect( this, &QWebEnginePage::featurePermissionRequested, this,
+             &WebPage::handleFeaturePermissionRequested );
+#if QT_VERSION >= QT_VERSION_CHECK( 6, 0, 0 )
     connect(
         this, SIGNAL( certificateError( const QWebEngineCertificateError ) ),
         SLOT( handleCertificateError( const QWebEngineCertificateError ) ) );
